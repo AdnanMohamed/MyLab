@@ -1,7 +1,5 @@
-// This program asks the user to enter the following his / her bank account :-
-// account number, balance, annual interest rate, yearly deposit, target balance.
-// The program will calculate the time needed for the current balance to reach the target balance
-// based on the account's specifications entered by the user.
+// This is the implementation file for Bank_Account class
+// See the header file in BankAccount.h
 
 #include"BankAccount.h"
 #include<iostream>
