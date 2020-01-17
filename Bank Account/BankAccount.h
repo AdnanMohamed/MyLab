@@ -53,19 +53,33 @@
 //std::ostream& operator<<(std::ostream& outs, const Bank_Account& account)
 //// Postcondition: Prints the account balance and annual interest rate
 //
-//double target_time(const Bank_Account&, double desired_balance, double yearly_deposit = 0)
+//double target_time(const Bank_Account&, double desired_balance, double yearly_deposit = 0) throw(invalid_balance, negative_amount, Bank_Account)
 //// Precondition: desired_balance should be greater than the
 //// original balance in the bank account and greater than $0.00; yearly_deposit >= $0.00
 //// Postcondition: The number of months to reach this balance will be returned
-
+//// HANDLING ERRORS: The function will throw invalid_balance in case desired_balance < current balance of the account or the desired balance < $0.00,
+//// negative_amount in case the yearly_deposit < $0.00, Bank_Account in case the current balance cannot grow to the desired balance 
+//// given the current balance, interest rate, and yearly deposit.
+//
+//  void newline()
+//// Postcondition: when called after a user input it will read whatever left
+//// by the input stream until the first \n in the input.
 #ifndef BANKACCOUNT_H
 #define BANKACCOUNT_H
 #include<iostream>
 namespace bank_account_adnan {
 
+	struct negative_balance {};	// error handling struct to throw when the operation makes the balance negative
+	struct negative_amount {};	// error handling struct to throw when the amount given by the user is negative
+	struct negative_years {}; // error handling struct to be thrown when the user inputs negative number
+							 //	corresponding for the years in add_interest function
+	struct invalid_balance {}; //error handling struct to be thrown for the function target_time()
+	struct invalid_account_number {}; // error handling struct to be thrown if the given account number is invalid
+
 	class Bank_Account {
 		public:
-			Bank_Account(double balance = 0, double interest_rate = 0, int account_number = 0);
+			Bank_Account() {}
+			Bank_Account(int account_number, double balance = 0, double interest_rate = 0);
 			
 			double get_balance()const { return balance_; }
 			double get_interest_rate()const { return interest_rate_; }
@@ -91,7 +105,9 @@ namespace bank_account_adnan {
 
 	std::ostream& operator<<(std::ostream& outs, const Bank_Account& account);
 
-	double target_time(const Bank_Account&, double desired_balance, double yearly_deposit = 0);
+	double target_time(const Bank_Account&, double desired_balance, double yearly_deposit = 0) throw(invalid_balance, negative_amount, Bank_Account);
+
+	void newline();
 }
 
 #endif // !BANKACCOUNT_H
