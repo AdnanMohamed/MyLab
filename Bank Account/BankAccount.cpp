@@ -131,7 +131,7 @@ namespace bank_account_adnan {
 		int account_number;
 		do
 		{
-			cout << "Enter the account number: ";
+			cout << "Enter the account number (5 digits): ";
 			ins >> account_number;
 		} while (!account.isvalid(account_number));
 		account.set_account_number(account_number);
