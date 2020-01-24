@@ -11,8 +11,9 @@
 #include<iostream>
 #include"mystring.h"
 #include<cstring>
+#include<algorithm>
 using std::cout; using std::cin; using std::endl;
-
+using std::copy;
 namespace string_adnan
 {
 	string::string(const char str[])
@@ -21,6 +22,15 @@ namespace string_adnan
 		sequence = new char[allocated];
 		strcpy_s(sequence, allocated, str);
 		current_length = strlen(sequence);
+	}
+
+	string::string(char ch)
+	{
+		allocated = 2;
+		current_length = 1;
+		sequence = new char[allocated];
+		sequence[0] = ch;
+		sequence[1] = '\0';
 	}
 
 	string::string(const string& source)
@@ -106,6 +116,17 @@ namespace string_adnan
 			sequence[source.current_length] = '\0';
 		}
 	}
+
+	//void string::insert(const string& str, size_t index)		--Debug this.
+	//{
+	//	allocated += str.allocated;
+	//	char* temp = new char[allocated];
+	//	copy(sequence, sequence + index, temp);
+	//	copy(str.sequence, str.sequence + str.current_length, temp);
+	//	copy(sequence + index, sequence + current_length, temp);
+	//	delete sequence;
+	//	sequence = temp;
+	//}
 
 	bool operator ==(const string& s1, const string& s2)
 	{

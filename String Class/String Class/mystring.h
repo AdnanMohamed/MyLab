@@ -11,6 +11,10 @@
 //     Precondition: str is an ordinary null-terminated string.
 //     Postcondition: The string contains the sequence of chars from str.
 //
+// CONSTRUCTOR:
+//  string(char ch)
+//     Postcondition: The string contains the character ch.
+//
 // CONSTANT MEMBER FUNCTIONS for the string class:
 //   size_t length( ) const
 //     Postcondition: The return value is the number of characters in the
@@ -37,6 +41,33 @@
 //   void reserve(size_t n)
 //     Postcondition: All functions will now work efficiently (without
 //     allocating new memory) until n characters are in the string.
+//
+//   void insert(const string& str, size_t index);
+//     Postcondition: str is inserted to the sequence of characters starting at index.
+//
+//   void erase(size_t start, size_t end = -1);
+//     Precondition: start >= 0, end > start (by default: end will be the length of the string)
+//     Postcondition: If end is given, the string will be erased from start to end (NOT INCLUDED).
+//     If only start given, the string will be erased from start to the rest of the string.
+//  
+//   void replace(const string& original, const string& new_str);
+//     Postcondition: if original is a substring in the string, it is replace by new_str.
+//     Otherwise, nothing changes.
+// 
+//   void replace(char original, char new_char);
+//     Postcondition: if original is in the string, it is replace by new_str.
+//     otherswise, nothing happens.
+//
+//   size_t find(char ch);
+//     Postcondition: The index of the first occurence of ch is returned. If not
+//     found returns -1.
+//
+//   size_t find(const string& substring)
+//     Postcondition: The index of the first occurence of substring is returned. If not
+//     found returns -1.
+//
+//   size_t count(char ch);
+//     Postcondition: number of times ch occured in the string is returned
 //
 // NON-MEMBER FUNCTIONS for the string class:
 //   string operator +(const string& s1, const string& s2)
@@ -85,6 +116,7 @@ namespace string_adnan
     public:
         // CONSTRUCTORS and DESTRUCTOR
         string(const char str[] = "");
+        string(char ch);
         string(const string& source);
         ~string() { delete sequence; }
         // MODIFICATION MEMBER FUNCTIONS
@@ -93,6 +125,13 @@ namespace string_adnan
         void operator +=(char addend);
         void reserve(size_t n);
         void operator =(const string& source);
+        void insert(const string& str, size_t index);
+        void erase(size_t start, size_t end = -1);
+        void replace(const string& original, const string& new_str);
+        void replace(char original, char new_char);
+        size_t find(char ch);
+        size_t find(const string& substring);
+        size_t count(char ch);
         // CONSTANT MEMBER FUNCTIONS
         size_t length() const { return current_length; }
         char operator [ ](size_t position) const;
