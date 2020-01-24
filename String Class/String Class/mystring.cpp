@@ -35,7 +35,17 @@ namespace string_adnan
 	{	
 		if(allocated < current_length + addend.current_length + 1)
 			this->reserve((allocated + addend.current_length) * 1.5);
-		strcat_s(sequence, allocated, addend.sequence);
+		if(this != &addend)
+			strcat_s(sequence, allocated, addend.sequence);
+		else
+		{
+
+			char* temp = new char[allocated];
+			strcpy_s(temp, allocated, sequence);
+			strcat_s(temp, allocated, sequence);
+			delete sequence;
+			sequence = temp;
+		}
 		current_length += addend.current_length;
 	}
 
