@@ -1,6 +1,6 @@
 // This is the implementation file for the class string
 // You can find the class in mystring.h
-//
+// @Author: Adnan Mohamed
 //
 //  CLASS INVARIANT: -- the class invariant is from Savitch and Main c++ book.
 // 1. The string is stored as a null - terminated string in the dynamic array that characters points to. 
