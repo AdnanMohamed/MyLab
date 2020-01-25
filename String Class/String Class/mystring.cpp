@@ -11,9 +11,7 @@
 #include<iostream>
 #include"mystring.h"
 #include<cstring>
-#include<algorithm>
 using std::cout; using std::cin; using std::endl;
-using std::copy;
 namespace string_adnan
 {
 	string::string(const char str[])
@@ -117,16 +115,87 @@ namespace string_adnan
 		}
 	}
 
-	//void string::insert(const string& str, size_t index)		--Debug this.
-	//{
-	//	allocated += str.allocated;
-	//	char* temp = new char[allocated];
-	//	copy(sequence, sequence + index, temp);
-	//	copy(str.sequence, str.sequence + str.current_length, temp);
-	//	copy(sequence + index, sequence + current_length, temp);
-	//	delete sequence;
-	//	sequence = temp;
-	//}
+	void string::insert(const string& str, size_t index)
+	{
+		allocated += str.allocated;
+		char* temp = new char[allocated];
+		strncpy_s(temp, allocated,sequence, index);
+		strcat_s(temp, allocated, str.sequence);
+		strcat_s(temp, allocated, sequence + index);
+		delete sequence;
+		sequence = temp;
+		current_length += str.current_length;
+	}
+
+	void string::erase(size_t start, size_t end)
+	{
+		if (end == -1)
+			end = current_length;
+		allocated -= (end - start);
+		char* temp = new char[allocated];
+		strncpy_s(temp, allocated, sequence, start);
+		strcat_s(temp, allocated, sequence + end);
+		delete sequence;
+		sequence = temp;
+		current_length = strlen(temp);
+	}
+
+	int string::find(char ch)
+	{
+		char* p;
+		p = strchr(sequence, ch);
+		if (p == NULL)
+			return -1;
+		else
+			return p - sequence;
+	}
+
+	int string::find(const string& substring)
+	{
+		char* p;
+		p = strstr(sequence, substring.sequence);
+		if (p == NULL)
+			return -1;
+		else
+			return p - sequence;
+	}
+
+	size_t string::count(char ch)
+	{
+		size_t sum = 0;
+		char* p;
+		p = strchr(sequence, ch);
+		while (p != NULL)
+		{
+			++sum;
+			p = strchr(p + 1, ch);
+		}
+		return sum;
+	}
+
+	void string::replace(const string& original, const string& new_str)
+	{
+		int index = -1;
+		index = this->find(original);
+		while (index != -1)
+		{
+			this->erase(index, index + original.length());
+			this->insert(new_str, index);
+			index = this->find(original);
+		}
+	}
+
+	void string::replace(char original, char new_char)
+	{
+		int index = -1;
+		index = this->find(original);
+		while (index != -1)
+		{
+			this->erase(index, index + 1);
+			this->insert(new_char, index);
+			index = this->find(original);
+		}
+	}
 
 	bool operator ==(const string& s1, const string& s2)
 	{
