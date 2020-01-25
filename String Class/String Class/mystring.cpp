@@ -12,7 +12,6 @@
 #include"mystring.h"
 #include<cstring>
 using std::cout; using std::cin; using std::endl;
-
 namespace string_adnan
 {
 	string::string(const char str[])
@@ -21,6 +20,15 @@ namespace string_adnan
 		sequence = new char[allocated];
 		strcpy_s(sequence, allocated, str);
 		current_length = strlen(sequence);
+	}
+
+	string::string(char ch)
+	{
+		allocated = 2;
+		current_length = 1;
+		sequence = new char[allocated];
+		sequence[0] = ch;
+		sequence[1] = '\0';
 	}
 
 	string::string(const string& source)
@@ -104,6 +112,88 @@ namespace string_adnan
 				sequence[i] = source.sequence[i];
 			}
 			sequence[source.current_length] = '\0';
+		}
+	}
+
+	void string::insert(const string& str, size_t index)
+	{
+		allocated += str.allocated;
+		char* temp = new char[allocated];
+		strncpy_s(temp, allocated,sequence, index);
+		strcat_s(temp, allocated, str.sequence);
+		strcat_s(temp, allocated, sequence + index);
+		delete sequence;
+		sequence = temp;
+		current_length += str.current_length;
+	}
+
+	void string::erase(size_t start, size_t end)
+	{
+		if (end == -1)
+			end = current_length;
+		allocated -= (end - start);
+		char* temp = new char[allocated];
+		strncpy_s(temp, allocated, sequence, start);
+		strcat_s(temp, allocated, sequence + end);
+		delete sequence;
+		sequence = temp;
+		current_length = strlen(temp);
+	}
+
+	int string::find(char ch)
+	{
+		char* p;
+		p = strchr(sequence, ch);
+		if (p == NULL)
+			return -1;
+		else
+			return p - sequence;
+	}
+
+	int string::find(const string& substring)
+	{
+		char* p;
+		p = strstr(sequence, substring.sequence);
+		if (p == NULL)
+			return -1;
+		else
+			return p - sequence;
+	}
+
+	size_t string::count(char ch)
+	{
+		size_t sum = 0;
+		char* p;
+		p = strchr(sequence, ch);
+		while (p != NULL)
+		{
+			++sum;
+			p = strchr(p + 1, ch);
+		}
+		return sum;
+	}
+
+	void string::replace(const string& original, const string& new_str)
+	{
+		int index = -1;
+		index = this->find(original);
+		while (index != -1)
+		{
+			this->erase(index, index + original.length());
+			this->insert(new_str, index);
+			index = this->find(original);
+		}
+	}
+
+	void string::replace(char original, char new_char)
+	{
+		int index = -1;
+		index = this->find(original);
+		while (index != -1)
+		{
+			this->erase(index, index + 1);
+			this->insert(new_char, index);
+			index = this->find(original);
 		}
 	}
 
