@@ -1,0 +1,6 @@
+Debug/
+Bigint.sln
+Bigint/Debug
+Bigint/*vcx*
+Bigint/test.cpp
+.vs/Bigint/
