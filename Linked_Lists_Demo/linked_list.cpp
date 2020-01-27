@@ -113,28 +113,17 @@ namespace node_adnan {
             return;
         }
 
-        size_t length = list_length(source_ptr);
-        size_t d_length = length;
-        node::value_type* data = new node::value_type[length];
+        list_head_insert(head_ptr, source_ptr->data());
+        tail_ptr = head_ptr;
+        source_ptr = source_ptr->link();
 
-        while (d_length > 0)                              // saving the data of the original list to be inserted
-        {                                                 // to the new list. The process of putting the data in the
-            data[d_length - 1] = source_ptr->data();      // array takes in account the insertion operation.
-            source_ptr = source_ptr->link();
-            --d_length;
-        }
-
-
-        list_head_insert(head_ptr, data[0]); // Setting first outside the loop to directly
-        tail_ptr = head_ptr;                 // set the tail also. (For efficiency reasons).
-
-
-        for (size_t i = 1; i < length; ++i)
+        while (source_ptr != NULL)
         {
-            list_head_insert(head_ptr, data[i]);
+            list_insert(tail_ptr, source_ptr->data());
+            source_ptr = source_ptr->link();
+            tail_ptr = tail_ptr->link();
         }
 
-        delete[] data;
     }
 
     void list_piece(const node* start_ptr, const node* end_ptr,
@@ -146,27 +135,19 @@ namespace node_adnan {
             tail_ptr = NULL;
             return;
         }
-        size_t max_length = list_length(start_ptr);
-        node::value_type* data = new node::value_type[max_length];
-        int index = 0;
+
+        list_head_insert(head_ptr, start_ptr->data());
+        tail_ptr = head_ptr;
+        start_ptr = start_ptr->link();
+
         while (start_ptr != end_ptr)
         {
-            data[index] = start_ptr->data();
+            list_insert(tail_ptr, start_ptr->data());
             start_ptr = start_ptr->link();
-            ++index;
-        }
-        --index;
-        list_head_insert(head_ptr, data[index]);
-        --index;
-        tail_ptr = head_ptr;
-
-        while (index >= 0)
-        {
-            list_head_insert(head_ptr, data[index]);
-            --index;
+            tail_ptr = tail_ptr->link();
         }
 
-        delete[] data;
     }
+
 
 } // end of namespace
