@@ -4,6 +4,7 @@
 
 #include<iostream>
 #include"bigint.hpp"
+#include<string.h>
 using std::cout; using std::cin; using std::endl;
 
 
@@ -61,11 +62,6 @@ using std::cout; using std::cin; using std::endl;
 
 	std::ostream& operator<<(std::ostream& outs, const bigint& number)
 	{
-		/*if (number.length_ == 1)
-		{
-			outs << number.;
-			return outs;
-		}*/
 		for (int i = number.length_ - 1; i >= 0; --i)
 		{
 			outs << number.number_[i];
