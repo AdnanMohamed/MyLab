@@ -108,6 +108,12 @@
 //     Postcondition: head_ptr and tail_ptr are the head and tail pointers for
 //     a new list that contains the same items as the list pointed to by
 //     source_ptr. The original list is unaltered.
+//
+//   void list_copy(const node* source_ptr, Node_Ptr& head_ptr);
+//     Precondition: source_ptr is a pointer pointing to the head of the original list.
+//     Postcondition: head_ptr is a pointer pointing to the head of a new list which contains
+//     the same values of the nodes in the original list.
+//
 //  void list_piece(
 //    const node* start_ptr, const node* end_ptr, 
 //    Node_Ptr& head_ptr, Node_Ptr& tail_ptr
@@ -177,6 +183,7 @@ namespace node_adnan
     void list_remove(node* previous_ptr);
     void list_clear(Node_Ptr& head_ptr);
     void list_copy(const node* source_ptr, Node_Ptr& head_ptr, Node_Ptr& tail_ptr);
+    void list_copy(const node* source_ptr, Node_Ptr& head_ptr);
     void list_piece(const node* start_ptr, const node* end_ptr,
         Node_Ptr& head_ptr, Node_Ptr& tail_ptr);
 }

@@ -126,6 +126,25 @@ namespace node_adnan {
 
     }
 
+    void list_copy(const node* source_ptr, Node_Ptr& head_ptr)
+    {
+        if (source_ptr == NULL)
+        {
+            head_ptr = NULL;
+            return;
+        }
+        list_head_insert(head_ptr, source_ptr->data());
+        Node_Ptr tail_ptr = head_ptr;
+        source_ptr = source_ptr->link();
+
+        while (source_ptr != NULL)
+        {
+            list_insert(tail_ptr, source_ptr->data());
+            source_ptr = source_ptr->link();
+            tail_ptr = tail_ptr->link();
+        }
+    }
+
     void list_piece(const node* start_ptr, const node* end_ptr,
         Node_Ptr& head_ptr, Node_Ptr& tail_ptr)
     {
