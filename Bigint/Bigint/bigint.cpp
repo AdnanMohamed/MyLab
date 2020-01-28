@@ -84,4 +84,29 @@ using std::cout; using std::cin; using std::endl;
 			}
 			return true;
 		}
+
+	}
+
+	std::istream& operator>> (std::istream& ins, bigint& number)
+	{
+		char* temp = new char[CAPACITY + 1];
+		temp[CAPACITY] = '\0';
+		char next;
+		cin.get(next);
+		int i = 0;
+		while (next != ';')
+		{
+			temp[i] = next;
+			cin.get(next);
+			++i;
+		}
+		--i;
+		if(i >= 0)
+		number.length_ = i;
+		while (i >= 0)
+		{
+			number.number_[i] = digit_to_int(temp[i]);
+			--i;
+		}
+		return ins;
 	}

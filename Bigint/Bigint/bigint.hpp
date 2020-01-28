@@ -28,6 +28,10 @@
 //	  Precondition: number is a number of type bigint (non-negative)
 //	  Postcondition: outputs the number to the stream.
 //
+//	std::istream& operator>> (std::istream& ins, bigint& number);
+//	  Postcondition: Reads the number from the user till ';'
+//	  The number will be the number entered by the user
+//
 //	bool operator==(const bigint& number1, const bigint& number2)
 //	  Postcondition: Returns true if the numbers are equal false otherwise.
 #ifndef BIGINT_H
@@ -51,6 +55,7 @@
 		// Friends
 		friend std::ostream& operator<<(std::ostream& outs, const bigint& number);
 		friend bool operator==(const bigint& number1, const bigint& number2);
+		friend std::istream& operator>> (std::istream& ins, bigint& number);
 	private:
 		int number_[CAPACITY] ;
 		int length_; // stores the number of digits in the number
