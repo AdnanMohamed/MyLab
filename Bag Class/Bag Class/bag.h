@@ -49,6 +49,9 @@
 //   bag operator +(const bag& b1, const bag& b2) 
 //     Postcondition: The bag returned is the union of b1 and b2.
 //
+//   std::ostream& operator<<(std::ostream& outs, const bag& the_bag)
+//     Postcondition: The elements of the bag is displayed to where the stream is connected
+//
 // VALUE SEMANTICS for the bag class:
 //    Assignments and the copy constructor may be used with bag objects.
 //
@@ -61,6 +64,7 @@
 #define MAIN_SAVITCH_BAG3_H
 #include <cstdlib>   // Provides size_t and NULL
 #include"linked_list.h"// Provides node class
+
 namespace bag_adnan
 {
     class bag
@@ -83,6 +87,8 @@ namespace bag_adnan
         size_type size() const { return many_nodes; }
         size_type count(const value_type& target) const;
         value_type grab() const;
+        // FRIENDS
+        friend std::ostream& operator<<(std::ostream& outs, const bag& the_bag);
     private:
         node_adnan::node* head_ptr;       // List head pointer 
         size_type many_nodes; // Number of nodes on the list

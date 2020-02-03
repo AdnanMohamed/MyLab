@@ -125,6 +125,10 @@
 //    end_ptr.  The end_ptr may also be NULL, in which case the new list 
 //    contains elements from start_ptr to the end of the list.
 //
+//  std::ostream& operator<<(std::ostream& outs, const node* head_ptr);
+//    Precondition: head_ptr is the pointer to the head node in the list.
+//    Postcondition: The list will be printed to the stream.
+//
 // DYNAMIC MEMORY usage by the toolkit: 
 //   If there is insufficient dynamic memory, then the following functions throw
 //   bad_alloc: the constructor, list_head_insert, list_insert, list_copy,
@@ -186,6 +190,7 @@ namespace node_adnan
     void list_copy(const node* source_ptr, Node_Ptr& head_ptr);
     void list_piece(const node* start_ptr, const node* end_ptr,
         Node_Ptr& head_ptr, Node_Ptr& tail_ptr);
+    std::ostream& operator<<(std::ostream& outs, const node* head_ptr);
 }
 
 #endif

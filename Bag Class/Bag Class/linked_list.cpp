@@ -168,5 +168,15 @@ namespace node_adnan {
 
     }
 
+    std::ostream& operator<<(std::ostream& outs, const node* head_ptr)
+    {
+        const node* cursor;
+        for (cursor = head_ptr; cursor != NULL; cursor = cursor->link())
+        {
+            outs << cursor->data() << " ";
+        }
+        return outs;
+    }
+
 
 } // end of namespace
