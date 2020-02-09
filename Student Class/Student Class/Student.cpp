@@ -48,14 +48,17 @@ namespace student_adnan {
 		return list_search(head_ptr_, Course(name, 0, grade)) != NULL;
 	}
 	
-	void Student::add_course(std::string name, int credits, std::string grade)
+	void Student::add_course(const course& new_course)
 	{
-		assert(grade == "A" || grade == "B" || grade == "C" ||
-			grade == "D" || grade == "F");
-		if (list_search(head_ptr_, Course(name, credits, grade)) == NULL)
+		assert(new_course.get_course_grade() == "A" || new_course.get_course_grade() == "B" || 
+			new_course.get_course_grade() == "C" || new_course.get_course_grade() == "D" || 
+			new_course.get_course_grade() == "F");
+		if (list_search(head_ptr_, new_course) == NULL)
 		{
-			list_head_insert(head_ptr_, Course(name, credits, grade));
+			list_head_insert(head_ptr_, new_course);
 			// calculate new GPA
+			int credits = new_course.get_course_hours();
+			std::string grade = new_course.get_course_grade();
 			GPA_ = (1 / double(credit_earned_ + credits)) * (GPA_ * credit_earned_ + credits * letter_to_credits(grade));
 			credit_earned_ += credits;
 		}

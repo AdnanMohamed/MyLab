@@ -57,10 +57,9 @@
 //	 Precondition: id> 0
 //	 Postcondition: the student has the specified id.
 //
-//	void add_course(std::string name, int credits, std::string grade)
+//	void add_course(const course& new_course)
 //	 Precondition: No course in the list has the same name and credits
 //	 The grade is in the set { 'A', 'B', 'C', 'D', 'F }
-//	 0 < credits < 5
 //	 Postcondition: the course is added to the list of courses
 //
 //  void remove_course(std::string name, std::string grade);
@@ -127,6 +126,7 @@ namespace student_adnan {
 
 	class Student {
 	public:
+		typedef courses_adnan::Course course;
 		// CONSTRUCTORS:
 		Student(const Name& name = Name(), const Date& birth = Date(), int ID = 99999, double GPA = 0.0);
 		Student(const Student& student);
@@ -146,7 +146,7 @@ namespace student_adnan {
 		int get_ID()const { return student_ID_; }
 
 		// MODIFICATION MEMBERS:
-		void add_course(std::string name, int credits, std::string grade);
+		void add_course(const course& new_course);
 		void remove_course(std::string name, std::string grade);
 		void remove_all();
 
