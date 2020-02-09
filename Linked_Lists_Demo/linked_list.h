@@ -125,6 +125,33 @@
 //    end_ptr.  The end_ptr may also be NULL, in which case the new list 
 //    contains elements from start_ptr to the end of the list.
 //
+//   size_t list_occurrences(const node* head_ptr, const node::value_type& target)
+//     Precondition: head_ptr is the head pointer of a linked list.
+//     Postcondition: The return value is the count of the number of times
+//     target appears as the data portion of a node on the linked list.
+//     The linked list itself is unchanged.
+//
+//   void list_tail_attach(node*& head_ptr, const node::value_type& entry)
+//     Precondition: head_ptr is the head pointer of a linked list.
+//     Postcondition: A new node containing the given entry has been added at
+//     the tail of the linked list; if this happens to be the first node of
+//     the linked list, then head_ptr now points to this node (otherwise
+//     head_ptr is unchanged).
+//
+//   void list_tail_remove(node*& head_ptr)
+//     Precondition: head_ptr is the head pointer of a linked list, with at
+//     least one node.
+//     Postcondition: The tail node has been removed and returned to the heap;
+//     if the list is now empty, then head_ptr is null; otherwise head_ptr
+//     is unchanged.
+//
+//   node* list_copy_front(const node* source_ptr, size_t n)
+//     Precondition: source_ptr is the head pointer of a linked list with
+//     at least n nodes.
+//     Postcondition: The value returned is the head pointer for
+//     a new list that contains copies of the first n nodes from the list
+//     that source_ptr points to.
+//
 //  std::ostream& operator<<(std::ostream& outs, const node* head_ptr);
 //    Precondition: head_ptr is the pointer to the head node in the list.
 //    Postcondition: The list will be printed to the stream.
@@ -191,6 +218,10 @@ namespace node_adnan
     void list_piece(const node* start_ptr, const node* end_ptr,
         Node_Ptr& head_ptr, Node_Ptr& tail_ptr);
     std::ostream& operator<<(std::ostream& outs, const node* head_ptr);
+    std::size_t list_occurrences(const node* head_ptr, const node::value_type& target);
+    void list_tail_attach(node*& head_ptr, const node::value_type& entry);
+    void list_tail_remove(node*& head_ptr);
+    node* list_copy_front(const node* source_ptr, std::size_t n);
 }
 
 #endif

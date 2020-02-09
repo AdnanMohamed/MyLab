@@ -6,6 +6,7 @@
 
 #include<iostream>
 #include"linked_list.h"
+#include<cassert>
 
 namespace node_adnan {
 
@@ -82,6 +83,8 @@ namespace node_adnan {
 
     void list_head_remove(Node_Ptr& head_ptr)
     {
+        assert(head_ptr != NULL);
+
         Node_Ptr temp = new node;
         temp = head_ptr;
         head_ptr = head_ptr->link();
@@ -178,5 +181,76 @@ namespace node_adnan {
         return outs;
     }
 
+    std::size_t list_occurrences(const node* head_ptr, const node::value_type& target)
+    {
+        size_t count = 0;
+        for (auto cursor = head_ptr; cursor != NULL; cursor = cursor->link())
+        {
+            if (cursor->data() == target)
+            {
+                ++count;
+            }
+        }
+        return count;
+    }
+
+    void list_tail_attach(node*& head_ptr, const node::value_type& entry)
+    {
+        if (head_ptr == NULL) // If the list is empty this will be the first node
+        {
+            list_head_insert(head_ptr, entry);
+            return;
+        }
+        node* new_node = new node(entry, NULL); // creates the new node to be attached
+        auto cursor = head_ptr;
+        while (cursor->link() != NULL)  // moves the cursor to the tail of the list
+        {
+            cursor = cursor->link();
+        }
+        cursor->set_link(new_node);
+    }
+
+    void list_tail_remove(node*& head_ptr)
+    {
+        // Assuming not empty list
+        assert(head_ptr != NULL);
+
+        // If one node in the list, remove it.
+        if (head_ptr->link() == NULL)
+        {
+            list_head_remove(head_ptr);
+            return;
+        }
+
+        node* temp = new node;
+        auto cursor = head_ptr;
+        // moves the cursor to the node before the tail
+        while (cursor->link()->link() != NULL)
+        {
+            cursor = cursor->link();
+        }
+        temp = cursor->link();
+        cursor->set_link(NULL);
+        delete temp;
+    }
+
+    node* list_copy_front(const node* source_ptr, std::size_t n)
+    {
+        assert(n <= list_length(source_ptr) && n >= 0);
+
+        node* head_ptr = NULL;
+        if (n == 0)
+            return head_ptr;
+        // insert the first node
+        list_head_insert(head_ptr, source_ptr->data());
+        source_ptr = source_ptr->link();
+        --n;
+        for (size_t i = 0; i < n; ++i, source_ptr = source_ptr->link())
+        {
+            list_tail_attach(head_ptr, source_ptr->data());
+        }
+
+        return head_ptr;
+    }
 
 } // end of namespace
