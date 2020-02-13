@@ -38,15 +38,17 @@
 //	 There is a student in the record with the specified id.
 //	 Postcondition: The details of the student will be displayed to the screen.
 //
+// NON-MODIFICATION MEMBERS
+//  bool student_exists(int id)
+//	 Postcondition: Returns true if the student is in the record, else false.
+//
+//	bool student_exists(const Name& student_name, const Date& birth_date)
+//   Postcondition: Returns true if the student is in the record, else false.
+//
 // OTHER FUNCTIONS:
 //  void menu(char& choice)
 //	 Postcondition: prints out a menu of choices.
 //	 The user's choice is stored in choice.
-//
-//	void view_record(node_student_adnan::Node_Ptr& head_ptr, const student_adnan::Student& student)
-//	 Precondtion: head_ptr is a pointer to the head of students' list.
-//	 The student is in the list.
-//	 Postcondition: The details of the student will be displayed to the screen.
 //
 //  bool is_valid(char choice)
 //   Postcondition: Returns true if the choice is in the menu, else false.
@@ -55,18 +57,21 @@
 //	 Postcondition: The user have inputted the name and date of birth.
 //	 and the entries are saved to name and birth respectively.
 //
+//  void get_student_info(student_adnan::Name& name, student_adnan::Date& birth, int& student_ID)
+//	 Postcondition: The user have inputted the name, date of birth, and student_ID.
+//	 and the entries are saved to name, birth, and student_ID respectively.
+//
 //  void get_course_info(std::string& course_name, int& credit_hours, std::string& letter_grade)
 //	 Postcondition: The user entered the course name, credit hours, and letter grade.
 //	 The entries are saved to the arguments.
 //
-//	bool record_exists(node_student_adnan::Node_Ptr& head_ptr, const student_adnan::Name& name, const student_adnan::Date& birth)
-//	 Postcondition: Returns true if the student is in the list, else false.
+//	void get_course_info(std::string& course_name, std::string& letter_grade)
+//	 Postcondition: The user will be asked to enter the course_name and letter_grade.
+//	 The user input will be saved to the arguments.
 //
 #ifndef STUDENTS_RECORD_H
 #define STUDENTS_RECORD_H
 #include"students_list.h"
-//#include"Student Class/course_list.h" // provides Course class
-//#include"Student Class/Student.h"
 
 namespace students_record_adnan {
 
@@ -81,29 +86,29 @@ namespace students_record_adnan {
 		Students_Record(const Students_Record& source_record);
 		// DESTRUCTOR
 		~Students_Record(); // @AM
-		//// MODIFICATION MEMBERS
+		
+		// MODIFICATION MEMBERS
 		void add_course(int id, const courses_adnan::Course& new_course); //@AM
 		void add_student(const student& new_student); // @AM
 		void remove_course(int id, std::string course_name, std::string grade); // @AM
 		void remove_student(int id); // @ AM
-		//void view_record(int id);
+		void view_record(int id); // @ AM
 		
 		// ASSIGNMENT OPERATOR
 		Students_Record operator=(const Students_Record& rhs); //@ AM
+		// NON-MODIFICATION MEMBERS
+		bool student_exists(int id); // @AM
+		bool student_exists(const student_adnan::Name& student_name, const student_adnan::Date& birth_date); // @AM
 	private:
 		student_node* head_ptr_;
 	};
 
-	//void menu(char& choice);
-	//bool is_valid(char choice);
-	//void add_record(node_student_adnan::Node_Ptr& head_ptr, const student_adnan::Student& student);
-	//void delete_record(node_student_adnan::Node_Ptr& head_ptr, student_adnan::Name name, student_adnan::Date birth);
-	//void view_record(node_student_adnan::Node_Ptr& head_ptr, const student_adnan::Student& student);
-	//void get_student_info(student_adnan::Name& name, student_adnan::Date& birth);
-	//void get_course_info(std::string& course_name, int& credit_hours, std::string& letter_grade);
-	//bool record_exists(node_student_adnan::Node_Ptr& head_ptr, const student_adnan::Name& name, const student_adnan::Date& birth);
-	//void insert_course(node_student_adnan::Node_Ptr& head_ptr, const student_adnan::Student& student, std::string course_name, int credit_hours, std::string letter_grade);
-	//void remove_course(node_student_adnan::Node_Ptr& head_ptr, const student_adnan::Student& student, std::string course_name, std::string letter_grade);
+	void menu(char& choice);
+	bool is_valid(char choice);
+	void get_student_info(student_adnan::Name& name, student_adnan::Date& birth);
+	void get_student_info(student_adnan::Name& name, student_adnan::Date& birth, int& student_ID);
+	void get_course_info(std::string& course_name, int& credit_hours, std::string& letter_grade);
+	void get_course_info(std::string& course_name, std::string& letter_grade);
 	void newline();
 }
 

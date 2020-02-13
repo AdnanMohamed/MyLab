@@ -2,14 +2,18 @@
 // The class is within namespace student_adnan.
 // The interface for the class Student is in Student.h
 //
-// @Author: Adnan Mohamed
-//
 // CLASS INVARIANT:
 //  1- name_ is the student's first & last name
 //	2- 0 <= GPA <= 4.0
 //  3- head_ptr_ points to the first node of the linked list.
 //  4- credit_earned_ is the sum of each course he/she taken
 //	5- student_ID_ must be greater than zero
+//
+// Suggestions to improve the program:-
+//	1- Handle exceptions for user entry
+//	2- Enhance the Date class to only accept valid dates.
+//
+// @ Author: Adnan Mohamed
 
 #include<iostream>
 #include<cassert>
