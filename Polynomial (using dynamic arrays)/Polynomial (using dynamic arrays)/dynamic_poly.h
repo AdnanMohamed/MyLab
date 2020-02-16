@@ -287,36 +287,38 @@ namespace dynamic_poly_adnan
 
 		// MODIFICATION MEMBER FUNCTIONS
 		void add_to_coef(double amount, unsigned int exponent); // @AM
-		void assign_coef(double coefficient, unsigned int exponent);
-		void clear();
-		void reserve(size_t number);
-		void trim();
+		void assign_coef(double coefficient, unsigned int exponent); // @AM
+		void clear(); // @AM
+		void reserve(size_t number); // @AM
+		void trim(); // @AM
 
-		//// MODIFICATION OPERATORS
-		//polynomial& operator =(const polynomial& source);
-		//polynomial& operator =(double c)
-		//{
-		//	clear(); assign_coef(c, 0); return *this;
-		//}
-		//polynomial& operator -=(const polynomial& p);
-		//polynomial& operator -=(double c)
-		//{
-		//	add_to_coef(-c, 0); return *this;
-		//};
-		//polynomial& operator +=(const polynomial& p);
-		//polynomial& operator +=(double c)
-		//{
-		//	add_to_coef(c, 0); return *this;
-		//};
-		//polynomial& operator *=(const polynomial& p);
-		//polynomial& operator *=(double c);
+		// MODIFICATION OPERATORS
+		polynomial& operator =(const polynomial& source); // @AM
+		polynomial& operator =(double c)
+		{
+			clear(); assign_coef(c, 0); return *this;
+		}
+		polynomial& operator -=(const polynomial& p);
+		polynomial& operator -=(double c)
+		{
+			add_to_coef(-c, 0); return *this;
+		};
+
+		polynomial& operator +=(const polynomial& p);
+		polynomial& operator +=(double c)
+		{
+			add_to_coef(c, 0); return *this;
+		};
+
+		polynomial& operator *=(const polynomial& p);
+		polynomial& operator *=(double c);
 
 		//// CONSTANT MEMBER FUNCTIONS
-		//double coefficient(unsigned int exponent) const;
+		double coefficient(unsigned int exponent) const;
 		//double definite_integral(double low_bound, double high_bound) const;
-		//unsigned int degree() const;
-		//polynomial derivative(unsigned int n = 1) const;
-		//double eval(double x) const;
+		unsigned int degree() const { return current_array_size - 1; }
+		polynomial derivative(unsigned int n = 1) const;
+		double eval(double x) const;
 		//void find_root(
 		//	double& answer,
 		//	bool& success,
