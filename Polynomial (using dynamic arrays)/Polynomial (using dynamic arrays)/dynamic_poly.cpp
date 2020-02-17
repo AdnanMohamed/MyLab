@@ -12,6 +12,7 @@
 #include<cassert>
 #include<algorithm>
 #include<cmath>
+#include<climits>
 
 namespace dynamic_poly_adnan {
 	polynomial::polynomial()
@@ -220,28 +221,63 @@ namespace dynamic_poly_adnan {
 		return result;
 	}
 
-	//polynomial polynomial::derivative(unsigned int n) const
-	//{
-	//	if (n == 0)			// the 0th derivative is just the same poly.
-	//		return *this;
-	//	
-	//	
-	//	else
-	//	{
-	//		double* new_coef = new double[current_array_size - n];
-	//		polynomial d;
+	polynomial polynomial::derivative(unsigned int n) const
+	{
+		if (n == 0)			// the 0th derivative is just the same poly.
+			return *this;
 
-	//		//for (int i = 0; i < n; ++i)
-	//		//{
-	//			for (size_t exp = d.current_array_size - 1; exp > 0; --exp)
-	//			{
-	//				d.assign_coef(d.coef[exp] * exp, exp - 1);
-	//			}
-	//		//}
+		polynomial d;
 
-	//			return d.derivative(n - 1);
-	//	}
+		for (size_t exp = current_array_size - 1; exp > 0; --exp)
+		{
+			d.assign_coef(coef[exp] * exp, exp - 1);
+		}
 
-
+		return d.derivative(n-1);
 	}
+
+	polynomial polynomial::integral(unsigned int n) const
+	{
+		if (n == 0)			// the 0th integral is just the same poly.
+			return *this;
+		
+		polynomial integ;
+
+		for(int exp = current_array_size - 1; exp >= 0; --exp)
+		{
+			integ.assign_coef(coef[exp] / double(exp + 1) , exp + 1);
+		}
+
+		return integ.integral(n-1);
+	}
+
+	double polynomial::definite_integral(double low_bound, double high_bound) const
+	{
+		polynomial F = integral();
+		return F(high_bound) - F(low_bound);
+	}
+
+	unsigned int polynomial::next_term(unsigned int e) const
+	{
+		if (e < degree())
+		{
+			if (coef[e + 1] != 0)
+				return e + 1;
+		}
+		return UINT_MAX;
+	}
+
+	unsigned int polynomial::previous_term(unsigned int e) const
+	{
+		if (e <= degree() + 1)
+		{
+			if (coef[e - 1] != 0)
+			{
+				return e - 1;
+			}
+		}
+		return UINT_MAX;
+	}
+
+	
 } // end of namespace

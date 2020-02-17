@@ -315,32 +315,32 @@ namespace dynamic_poly_adnan
 
 		//// CONSTANT MEMBER FUNCTIONS
 		double coefficient(unsigned int exponent) const;
-		//double definite_integral(double low_bound, double high_bound) const;
+		double definite_integral(double low_bound, double high_bound) const;
 		unsigned int degree() const { return current_array_size - 1; }
 		polynomial derivative(unsigned int n = 1) const;
 		double eval(double x) const;
-		//void find_root(
-		//	double& answer,
-		//	bool& success,
-		//	unsigned int& iterations,
-		//	double guess = 0,
-		//	unsigned int maximum_iterations = 100,
-		//	double epsilon = 1e-8
-		//)
-		//	const;
-		/*polynomial integral(unsigned int n = 1) const;
-		unsigned int next_term(unsigned int e) const;
-		unsigned int previous_term(unsigned int e) const;
-		double numeric_integral(
-			double low_bound,
-			double high_bound,
-			unsigned int many_trapezoids = 100
+		/*void find_root(
+			double& answer,
+			bool& success,
+			unsigned int& iterations,
+			double guess = 0,
+			unsigned int maximum_iterations = 100,
+			double epsilon = 1e-8
 		)
 			const;*/
+		polynomial integral(unsigned int n = 1) const;
+		unsigned int next_term(unsigned int e) const;
+		unsigned int previous_term(unsigned int e) const;
+		//double numeric_integral(
+		//	double low_bound,
+		//	double high_bound,
+		//	unsigned int many_trapezoids = 100
+		//)
+		//	const;
 		//polynomial substitution(const polynomial& p) const;
 
 		//// CONSTANT OPERATORS
-		//double operator( ) (double x) const { return eval(x); }
+		double operator( ) (double x) const { return eval(x); }
 		//polynomial operator( ) (const polynomial& p) const { return substitution(p); }
 		////polynomial operator -() const;
 		//polynomial operator +() const { return (*this); };
