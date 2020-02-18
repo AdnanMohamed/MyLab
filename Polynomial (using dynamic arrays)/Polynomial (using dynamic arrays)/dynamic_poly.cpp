@@ -192,6 +192,7 @@ namespace dynamic_poly_adnan {
 		
 		delete[] coef;
 		coef = new_coef;
+		current_array_size = current_array_size + p.current_array_size - 1;
 		return *this;
 	}
 	
@@ -279,5 +280,126 @@ namespace dynamic_poly_adnan {
 		return UINT_MAX;
 	}
 
+	double polynomial::numeric_integral(double low_bound, double high_bound, unsigned int many_trapezoids)const
+	{
+		double delta_x = (high_bound - low_bound) / many_trapezoids;
+		double area = (delta_x / 2.0) * (eval(low_bound) + eval(high_bound));
+
+		double x = low_bound + delta_x;
+		while (x < high_bound)
+		{
+			area += (delta_x / 2.0) * (2 * eval(x));
+			x += delta_x;
+		}
+		
+		return area;
+	}
+
+	//polynomial polynomial::substitution(const polynomial& p) const
+	//{
+	//	polynomial p2;
+	//	
+	//	for (int n = degree() + 1; n > 0; --n)
+	//	{
+	//		if (previous_term(n) != UINT_MAX)
+	//		{
+	//			p2 += p ^ (previous_term(n));
+	//		}
+	//	}
+
+	//	return p2;
+	//}
+
+	polynomial operator +(const polynomial& p1, const polynomial& p2)
+	{
+		polynomial p3(p1);
+		return p3 += p2;
+	}
+
+	polynomial operator +(const polynomial& p, double c)
+	{
+		polynomial p2(p);
+		return p2 += c;
+	}
+
+	polynomial operator +(double c, const polynomial& p)
+	{
+		return p + c;
+	}
+
+	polynomial operator -(const polynomial& p1, const polynomial& p2)
+	{
+		polynomial p3(p2);
+		p3 *= -1;
+		return p1 + p3;
+	}
+
+	polynomial operator -(const polynomial& p, double c)
+	{ 
+		return p + (-c); 
+	}
 	
+	polynomial operator -(double c, const polynomial& p)
+	{ 
+		return polynomial(c) - polynomial(p); 
+	}
+
+	polynomial operator *(const polynomial& p1, const polynomial& p2)
+	{
+		polynomial p3(p1);
+		return p3 *= p2;
+	}
+
+	polynomial operator *(const polynomial& p, double c)
+	{
+		return p * polynomial(c);
+	}
+
+	std::ostream& operator << (std::ostream& out, const polynomial& p)
+	{
+		// Edit this function such that displays as follows:-
+		//	1- If the polynomial is zero display 0
+		//  2- If normal display like: 2.00 x^2 + 3.20 x^4 - 7
+		//	3- DON'T display + at the beggining
+		//  4- display x^1 or x^0 1.00x^5 as x, 1, x^5 respectively.
+		out.setf(std::ios::showpoint);
+		out.setf(std::ios::fixed);
+		out.precision(2);
+		for (int n = p.degree() + 1; n > 0; --n)
+		{
+			if (p.previous_term(n) != UINT_MAX)
+			{
+				if (p.previous_term(n) > 0)
+				{
+					out.setf(std::ios::showpos);
+					out << p.coefficient(p.previous_term(n)) <<"x^"<< p.previous_term(n)<<" ";
+				}
+				else
+				out << p.coefficient(p.previous_term(n)) << "x^" << p.previous_term(n) << " ";
+			}
+		}
+		return out;
+	}
+
+	polynomial operator *(double c, const polynomial& p)
+	{
+		return p * c; 
+	}
+
+	polynomial operator ^(const polynomial& p, unsigned int n)
+	{
+		if (n == 0)
+			return 1;
+
+		polynomial p2(p);
+
+		while (n > 1)
+		{
+			p2 *= p;
+			--n;
+		}
+
+		return p2;
+	}
+
 } // end of namespace

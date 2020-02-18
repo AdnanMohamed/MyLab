@@ -331,12 +331,12 @@ namespace dynamic_poly_adnan
 		polynomial integral(unsigned int n = 1) const;
 		unsigned int next_term(unsigned int e) const;
 		unsigned int previous_term(unsigned int e) const;
-		//double numeric_integral(
-		//	double low_bound,
-		//	double high_bound,
-		//	unsigned int many_trapezoids = 100
-		//)
-		//	const;
+		double numeric_integral(
+			double low_bound,
+			double high_bound,
+			unsigned int many_trapezoids = 100
+		)
+			const;
 		//polynomial substitution(const polynomial& p) const;
 
 		//// CONSTANT OPERATORS
@@ -351,24 +351,25 @@ namespace dynamic_poly_adnan
 	};
 
 	//// NON-MEMBER BINARY OPERATORS
-	//polynomial operator +(const polynomial& p1, const polynomial& p2);
-	//polynomial operator +(const polynomial& p, double c);
-	//inline
-	//	polynomial operator +(double c, const polynomial& p) { return p + c; };
-	//polynomial operator -(const polynomial& p1, const polynomial& p2);
-	//inline
-	//	polynomial operator -(const polynomial& p, double c) { return p + (-c); };
-	//inline
-	//	polynomial operator -(double c, const polynomial& p) { return p + (-c); };
-	//polynomial operator *(const polynomial& p1, const polynomial& p2);
-	//polynomial operator *(const polynomial& p, double c);
-	//inline
-	//	polynomial operator *(double c, const polynomial& p) { return p * c; };
-	//polynomial operator ^(const polynomial& p, unsigned int n);
+
+	// Addition
+	polynomial operator +(const polynomial& p1, const polynomial& p2); // @AM
+	polynomial operator +(const polynomial& p, double c); // @AM
+	polynomial operator +(double c, const polynomial& p);
+	// Subtraction
+	polynomial operator -(const polynomial& p1, const polynomial& p2);
+	polynomial operator -(const polynomial& p, double c);
+	polynomial operator -(double c, const polynomial& p);
+	// multiplication
+	polynomial operator *(const polynomial& p1, const polynomial& p2);
+	polynomial operator *(const polynomial& p, double c);
+	polynomial operator *(double c, const polynomial& p);
+	// Power
+	polynomial operator ^(const polynomial& p, unsigned int n);
 
 	//// NON-MEMBER INPUT/OUTPUT FUNCTIONS
 	//std::istream& operator >> (std::istream& in, polynomial& p);
-	//std::ostream& operator << (std::ostream& out, const polynomial& p);
+	std::ostream& operator << (std::ostream& out, const polynomial& p);
 	//void make_gif(
 	//	const polynomial& p,
 	//	const char filename[],
