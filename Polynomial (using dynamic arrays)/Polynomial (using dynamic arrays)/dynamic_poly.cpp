@@ -280,6 +280,37 @@ namespace dynamic_poly_adnan {
 		return UINT_MAX;
 	}
 
+	void polynomial::find_root(
+		double& answer,
+		bool& success,
+		unsigned int& iterations,
+		double guess,
+		unsigned int maximum_iterations,
+		double epsilon
+	)const
+	{
+		iterations = 0;
+		success = false;
+		polynomial d = derivative(); // d for derivative
+		while (iterations < maximum_iterations)
+		{
+			if (abs(d(guess)) < epsilon)
+			{
+				answer = guess;
+				break;
+			}
+			guess = guess - (this->eval(guess) / d(guess));
+			iterations++;
+			if (abs(this->eval(guess)) <= epsilon)
+			{
+				success = true;
+				answer = guess;
+				return;
+			}
+		}
+		
+	}
+
 	double polynomial::numeric_integral(double low_bound, double high_bound, unsigned int many_trapezoids)const
 	{
 		double delta_x = (high_bound - low_bound) / many_trapezoids;
@@ -295,20 +326,23 @@ namespace dynamic_poly_adnan {
 		return area;
 	}
 
-	//polynomial polynomial::substitution(const polynomial& p) const
-	//{
-	//	polynomial p2;
-	//	
-	//	for (int n = degree() + 1; n > 0; --n)
-	//	{
-	//		if (previous_term(n) != UINT_MAX)
-	//		{
-	//			p2 += p ^ (previous_term(n));
-	//		}
-	//	}
+	polynomial polynomial::substitution(const polynomial& p) const
+	{
+		polynomial p2;
+		
+		for (int n = degree() + 1; n > 0; --n)
+		{
+			if (previous_term(n) != UINT_MAX)
+			{
+				p2 += coef[n-1] * ( p ^ (previous_term(n)) );
+			}
+		}
 
-	//	return p2;
-	//}
+		return p2;
+	}
+
+	polynomial polynomial::operator -() const
+	{ return (*this) * (-1); }
 
 	polynomial operator +(const polynomial& p1, const polynomial& p2)
 	{
