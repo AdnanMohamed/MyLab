@@ -40,6 +40,7 @@ namespace dynamic_poly_adnan {
 			else
 				coef[i] = c;
 		}
+		trim();
 	}
 
 	void polynomial::add_to_coef(double amount, unsigned int exponent)
@@ -65,6 +66,7 @@ namespace dynamic_poly_adnan {
 		{
 			coef[exponent] += amount;
 		}
+		trim();
 	}
 
 	void polynomial::assign_coef(double coefficient, unsigned int exponent)
@@ -90,6 +92,7 @@ namespace dynamic_poly_adnan {
 		{
 			coef[exponent] = coefficient;
 		}
+		trim();
 	}
 
 	void polynomial::clear()
@@ -98,6 +101,7 @@ namespace dynamic_poly_adnan {
 		{
 			coef[i] = 0;
 		}
+		trim();
 	}
 
 	void polynomial::reserve(size_t number)
@@ -165,6 +169,7 @@ namespace dynamic_poly_adnan {
 		{
 			add_to_coef(-p.coef[i], i);
 		}
+		trim();
 		return *this;
 	}
 
@@ -174,6 +179,7 @@ namespace dynamic_poly_adnan {
 		{
 			add_to_coef(p.coef[i], i);
 		}
+		trim();
 		return *this;
 	}
 
@@ -193,6 +199,7 @@ namespace dynamic_poly_adnan {
 		delete[] coef;
 		coef = new_coef;
 		current_array_size = current_array_size + p.current_array_size - 1;
+		trim();
 		return *this;
 	}
 	
@@ -202,13 +209,16 @@ namespace dynamic_poly_adnan {
 		{
 			assign_coef(coef[i] * c, i);
 		}
+		//trim();
 		return *this;
 	}
 
 	double polynomial::coefficient(unsigned int exponent) const
 	{
-		assert(exponent < current_array_size);
-		return coef[exponent];
+		if (exponent < current_array_size)
+			return coef[exponent];
+		else
+			return 0;
 	}
 
 	double polynomial::eval(double x) const
@@ -262,8 +272,12 @@ namespace dynamic_poly_adnan {
 	{
 		if (e < degree())
 		{
-			if (coef[e + 1] != 0)
-				return e + 1;
+			do
+			{
+				if (coef[e + 1] != 0)
+					return e + 1;
+				++e;
+			} while (coef[e + 1] != 0 && e < degree());
 		}
 		return UINT_MAX;
 	}
@@ -391,27 +405,68 @@ namespace dynamic_poly_adnan {
 
 	std::ostream& operator << (std::ostream& out, const polynomial& p)
 	{
-		// Edit this function such that displays as follows:-
-		//	1- If the polynomial is zero display 0
-		//  2- If normal display like: 2.00 x^2 + 3.20 x^4 - 7
-		//	3- DON'T display + at the beggining
-		//  4- display x^1 or x^0 1.00x^5 as x, 1, x^5 respectively.
 		out.setf(std::ios::showpoint);
 		out.setf(std::ios::fixed);
 		out.precision(2);
-		for (int n = p.degree() + 1; n > 0; --n)
+
+		// If the polynomial is just a constanct, print the constant
+		if (p.degree() == 0)
+		{
+			out << p.coefficient(p.degree());
+			return out;
+		}
+		// Print the polynomial's terms starting from the highest term
+		// down to the second degree; such that only terms with |coefficients| > 0 will be printed
+		if (p.degree() > 1)
+		{
+			if (p.coefficient(p.degree()) != 0)
+				out << p.coefficient(p.degree()) << "x^" << p.degree() << " ";
+		}
+
+		for (int n = p.degree(); n > 2; --n)
 		{
 			if (p.previous_term(n) != UINT_MAX)
-			{
-				if (p.previous_term(n) > 0)
 				{
-					out.setf(std::ios::showpos);
-					out << p.coefficient(p.previous_term(n)) <<"x^"<< p.previous_term(n)<<" ";
+				
+					if (p.coefficient(n - 1) > 0)
+					{
+						out << "+ ";
+					}
+					else
+						out << "- ";
+				
+					if (abs(p.coefficient(p.previous_term(n))) != 1)
+						out << abs(p.coefficient(n - 1));
+
+						out << "x^" << p.previous_term(n)<< " ";
 				}
-				else
-				out << p.coefficient(p.previous_term(n)) << "x^" << p.previous_term(n) << " ";
-			}
 		}
+
+		// printing the term with x^1 if the coef is not 0
+		if (p.previous_term(2) != UINT_MAX)
+		{
+			if (abs(p.coefficient(p.previous_term(2))) != 1)
+			{
+				if (p.degree() > 1)
+				{
+					if (p.coefficient(1) > 0)
+						out << "+ ";
+				}
+				out << p.coefficient(1);
+			}
+			out << "x ";
+		}
+
+		// print the constant if it's not zero
+		if (p.coefficient(0)!= 0)
+		{
+			if (p.coefficient(0) > 0)
+				out << "+ ";
+			else
+				out << "- ";
+			out << abs(p.coefficient(0));
+		}
+
 		return out;
 	}
 

@@ -3,4 +3,5 @@ Debug/
 Polynomial (using dynamic arrays).sln
 Polynomial (using dynamic arrays)/Debug/
 Polynomial (using dynamic arrays)/*vcx*
-Polynomial (using dynamic arrays)/test_poly.cpp
+Polynomial (using dynamic arrays)/my_test.cpp
+Polynomial (using dynamic arrays)/poly_gif.cpp

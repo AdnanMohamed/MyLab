@@ -238,7 +238,7 @@
 //        Also, some pieces are optional:
 //        For the first term or any term preceeded by blanks,
 //        any positive SIGN is optional;
-//        if at least one of parts c-f is present, then a COEF of 1 is optional;
+//        if at least one of parts c-e is present, then a COEF of 1 is optional;
 //        if the EXPONENT is zero, then all of parts c-e may be omitted;
 //        if the EXPONENT is one, then all of parts d-e may be omitted.
 //     3. The newline at the end of the line is read and discarded.
@@ -280,20 +280,20 @@ namespace dynamic_poly_adnan
 	{
 	public:
 		// CONSTRUCTORS and DESTRUCTOR
-		polynomial(); // @AM
-		polynomial(const polynomial& source); // @AM
-		polynomial(double c, unsigned int exponent = 0); // @AM
-		~polynomial() { delete[] coef; } // @AM
+		polynomial();
+		polynomial(const polynomial& source);
+		polynomial(double c, unsigned int exponent = 0);
+		~polynomial() { delete[] coef; }
 
 		// MODIFICATION MEMBER FUNCTIONS
-		void add_to_coef(double amount, unsigned int exponent); // @AM
-		void assign_coef(double coefficient, unsigned int exponent); // @AM
-		void clear(); // @AM
-		void reserve(size_t number); // @AM
-		void trim(); // @AM
+		void add_to_coef(double amount, unsigned int exponent);
+		void assign_coef(double coefficient, unsigned int exponent);
+		void clear();
+		void reserve(size_t number);
+		void trim();
 
 		// MODIFICATION OPERATORS
-		polynomial& operator =(const polynomial& source); // @AM
+		polynomial& operator =(const polynomial& source);
 		polynomial& operator =(double c)
 		{
 			clear(); assign_coef(c, 0); return *this;
@@ -370,14 +370,14 @@ namespace dynamic_poly_adnan
 	//// NON-MEMBER INPUT/OUTPUT FUNCTIONS
 	//std::istream& operator >> (std::istream& in, polynomial& p);
 	std::ostream& operator << (std::ostream& out, const polynomial& p);
-	//void make_gif(
-	//	const polynomial& p,
-	//	const char filename[],
-	//	double low_x,
-	//	double high_x,
-	//	double low_y,
-	//	double high_y
-	//);
+	/*void make_gif(
+		const polynomial& p,
+		const char filename[],
+		double low_x,
+		double high_x,
+		double low_y,
+		double high_y
+	);*/
 
 } // END OF NAMESPACE
 #endif
