@@ -1,0 +1,8 @@
+.vs/bag class (using templates)
+Debug/
+x64/
+bag class (using templates).sln
+bag class (using templates)/x64/
+bag class (using templates)/Debug/
+bag class (using templates)/*.vcx*
+bag class (using templates)/test.cpp
