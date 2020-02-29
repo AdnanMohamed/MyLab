@@ -2,4 +2,6 @@ Keyed Bag/Debug
 .vs/Keyed Bag
 Keyed Bag.sln
 Keyed Bag/*vcx*
+Keyed Bag/test.cpp
 Debug/
+functions to add.txt
