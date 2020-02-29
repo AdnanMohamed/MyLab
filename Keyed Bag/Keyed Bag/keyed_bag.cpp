@@ -139,7 +139,47 @@ namespace keyed_bag_adnan {
 		}
 	}
 
+	bool operator==(const keyed_bag& b1, const keyed_bag& b2)
+	{
+		// if different size then not equal bags
+		if (b1.size() != b2.size())
+			return false;
+		for (auto cursor = b1.head_ptr_; cursor != NULL; cursor = cursor->link())
+		{
+			if (!b2.is_item(cursor->data().first) || b1[cursor->data().first] != b2[cursor->data().first])
+				return false;
+		}
 
+		return true;
+	}
+
+	bool operator!=(const keyed_bag& b1, const keyed_bag& b2)
+	{
+		return !(b1 == b2);
+	}
+
+	keyed_bag operator+(const keyed_bag& b1, const keyed_bag& b2)
+	{
+		keyed_bag b3(b1);
+		for (auto cursor = b2.head_ptr_; cursor != NULL; cursor = cursor->link())
+		{
+			if (!b3.is_item(cursor->data().first))
+				b3.insert(cursor->data().first, cursor->data().second);
+		}
+		return b3;
+	}
+
+	keyed_bag operator-(const keyed_bag& b1, const keyed_bag& b2)
+	{
+		keyed_bag b3(b1);
+		for (auto cursor = b2.head_ptr_; cursor != NULL; cursor = cursor->link())
+		{
+			if (b3.is_item(cursor->data().first))
+				b3.remove(cursor->data().first);
+		}
+		return b3;
+	}
+	
 	// FOR DEBUGGING:
 	void keyed_bag::print_bag()
 	{

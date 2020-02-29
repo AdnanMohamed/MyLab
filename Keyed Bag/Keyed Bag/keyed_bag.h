@@ -46,6 +46,23 @@
 //	std::string& operator[](int key)
 //	 Precondition: key is valid, is_item(key) returs true
 //	 Postcondition: returns value itself (by ref.) corresponding to the key. 
+//
+// NON-MEMBERS
+//	keyed_bag operator+(const keyed_bag& b1, const keyed_bag& b2)
+//	 Postcondition: Returns a keyed_bag with elements of both b1 and b2 such that if an element
+//	 in b1 and b2 has the same key, the element in b1 only occurs in the returned bag.
+//
+//  bool operator==(const keyed_bag&)
+//	 Postcondition: Returns true if, for all (key, value) pair in lhs there exists a pair in
+//	 the rhs keyed_bag such that has (key, value). Else returns false.
+//
+//  bool operator!=(const keyed_bag&)
+//	 Postcondition: Returns True if, there exists an element in the lhs keyed bag with (key, value) pair
+//	 such that no corresponding element in the rhs keyed_bag which has the same (key, value) pair.
+//
+//	keyed_bag operator-(const keyed_bag& b1, const keyed_bag& b2);
+//	 Postcondition: Returns a keyed bag which includes the unique elements of b1 which does not occur in b2.
+//	 (i.e. an element with key = k in b1 and b2 will not be in the returned bag)
 
 #ifndef KEYED_BAG_H
 #define KEYED_BAG_H
@@ -85,6 +102,13 @@ namespace keyed_bag_adnan
 		// OPERATORS:
 		std::string operator[](int key)const;
 		std::string& operator[](int key);
+		
+
+		// NON-MEMBERS
+		friend keyed_bag operator+(const keyed_bag& b1, const keyed_bag& b2);
+		friend keyed_bag operator-(const keyed_bag& b1, const keyed_bag& b2);
+		friend bool operator==(const keyed_bag& b1, const keyed_bag& b2);
+		friend bool operator!=(const keyed_bag& b1, const keyed_bag& b2);
 		
 		// FOR DEBUGGIN:
 		void print_bag();
