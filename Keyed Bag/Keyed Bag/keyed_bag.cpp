@@ -179,14 +179,6 @@ namespace keyed_bag_adnan {
 		}
 		return b3;
 	}
-	
-	// FOR DEBUGGING:
-	void keyed_bag::print_bag()
-	{
-		for (auto cursor = head_ptr_; cursor != NULL; cursor = cursor->link())
-		{
-			std::cout << "Key: " << cursor->data().first << " value: " << cursor->data().second << std::endl;
-		}
-	}
+
 
 }

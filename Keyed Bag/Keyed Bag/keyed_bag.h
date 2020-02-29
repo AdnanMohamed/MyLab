@@ -102,7 +102,6 @@ namespace keyed_bag_adnan
 		// OPERATORS:
 		std::string operator[](int key)const;
 		std::string& operator[](int key);
-		
 
 		// NON-MEMBERS
 		friend keyed_bag operator+(const keyed_bag& b1, const keyed_bag& b2);
@@ -110,8 +109,6 @@ namespace keyed_bag_adnan
 		friend bool operator==(const keyed_bag& b1, const keyed_bag& b2);
 		friend bool operator!=(const keyed_bag& b1, const keyed_bag& b2);
 		
-		// FOR DEBUGGIN:
-		void print_bag();
 	private:
 		node* head_ptr_;
 		size_type many_elements_;
