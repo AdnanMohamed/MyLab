@@ -180,5 +180,11 @@ namespace keyed_bag_adnan {
 		return b3;
 	}
 
-
+	void print_bag(const keyed_bag& k_bag)
+	{
+		for (auto it = k_bag.begin(); it != k_bag.end(); ++it)
+		{
+			std::cout << "(key: " << (*it).first << ", value: " << (*it).second << ")" << std::endl;
+		}
+	}
 }

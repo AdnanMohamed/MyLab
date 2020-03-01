@@ -8,6 +8,15 @@
 //     This is the data type of any variable that keeps track of how many items
 //     are in a keyed_bag
 //
+//   bag<Item>::iterator and bag<Item>::const_iterator
+//     Forward iterators for a bag or a const bag.
+//
+// STANDARD ITERATOR MEMBER FUNCTIONS (provide a forward iterator):
+//   iterator begin( )
+//   const_iterator begin( ) const
+//   iterator end( )
+//   const iterator end( ) const
+//
 // CONSTRUCTORS:
 //	keyed_bag()
 //	 Postcondition: an empty bag is created, the bag's size = 0
@@ -63,6 +72,9 @@
 //	keyed_bag operator-(const keyed_bag& b1, const keyed_bag& b2);
 //	 Postcondition: Returns a keyed bag which includes the unique elements of b1 which does not occur in b2.
 //	 (i.e. an element with key = k in b1 and b2 will not be in the returned bag)
+//
+//  void print_bag(const keyed_bag&)
+//	 Postcondition: the elements will be printed one at each line like (key: 1, value: "String")
 
 #ifndef KEYED_BAG_H
 #define KEYED_BAG_H
@@ -79,6 +91,8 @@ namespace keyed_bag_adnan
 		// TYPE_DEFS
 		typedef size_t size_type;
 		typedef node::value_type value_type;
+		typedef node_iterator iterator;
+		typedef const_node_iterator const_iterator;
 
 		// CONSTRUCTORS
 		keyed_bag();
@@ -103,6 +117,24 @@ namespace keyed_bag_adnan
 		std::string operator[](int key)const;
 		std::string& operator[](int key);
 
+		// FUNCTIONS TO PROVIDE ITERATORS
+		iterator begin()
+		{
+			return iterator(head_ptr_);
+		}
+		const_iterator begin() const
+		{
+			return const_iterator(head_ptr_);
+		}
+		iterator end()
+		{
+			return iterator();
+		} // Uses default constructor 
+		const_iterator end() const
+		{
+			return const_iterator();
+		} // Uses default constructor 
+
 		// NON-MEMBERS
 		friend keyed_bag operator+(const keyed_bag& b1, const keyed_bag& b2);
 		friend keyed_bag operator-(const keyed_bag& b1, const keyed_bag& b2);
@@ -113,6 +145,9 @@ namespace keyed_bag_adnan
 		node* head_ptr_;
 		size_type many_elements_;
 	};
+
+	// Usefull Printing function.
+	void print_bag(const keyed_bag&);
 }
 
 #endif

@@ -205,6 +205,81 @@ namespace keyed_bag_adnan
         node* link_field;
     };
 
+    class node_iterator
+        : public std::iterator<std::forward_iterator_tag, std::pair<int, std::string>>
+    {
+    public:
+        typedef std::pair<int, std::string> Item;
+        node_iterator(node* initial = NULL)
+        {
+            current = initial;
+        }
+        Item& operator *() 
+        {
+            return current->data();
+        }
+        node_iterator& operator ++() // Prefix ++
+        {
+            current = current->link();
+            return *this;
+        }
+        node_iterator operator ++(int) // Postfix ++
+        {
+            node_iterator original(current);
+            current = current->link();
+            return original;
+        }
+        bool operator ==(const node_iterator other) const
+        {
+            return current == other.current;
+        }
+        bool operator !=(const node_iterator other) const
+        {
+            return current != other.current;
+        }
+
+
+    private:
+        node* current;
+    };
+
+    class const_node_iterator
+        : public std::iterator<std::forward_iterator_tag, const std::pair<int, std::string>>
+    {
+    public:
+        typedef std::pair<int, std::string> Item;
+        const_node_iterator(const node* initial = NULL)
+        {
+            current = initial;
+        }
+        const Item operator *() const
+        {
+            return current->data();
+        }
+        const_node_iterator& operator ++() // Prefix ++
+        {
+            current = current->link();
+            return *this;
+        }
+        const_node_iterator operator ++(int) // Postfix ++
+        {
+            const_node_iterator original(current);
+            current = current->link();
+            return original;
+        }
+        bool operator ==(const const_node_iterator other) const
+        {
+            return current == other.current;
+        }
+        bool operator !=(const const_node_iterator other) const
+        {
+            return current != other.current;
+        }
+
+    private:
+        const node* current;
+    };
+
     typedef node* Node_Ptr;
 
     // FUNCTIONS for the linked list toolkit
@@ -222,7 +297,7 @@ namespace keyed_bag_adnan
     void list_copy(const node* source_ptr, Node_Ptr& head_ptr);
     void list_piece(const node* start_ptr, const node* end_ptr,
         Node_Ptr& head_ptr, Node_Ptr& tail_ptr);
-    std::ostream& operator<<(std::ostream& outs, const node* head_ptr);
+    //std::ostream& operator<<(std::ostream& outs, const node* head_ptr);
     std::size_t list_occurrences(const node* head_ptr, const node::value_type& target);
     void list_tail_attach(node*& head_ptr, const node::value_type& entry);
     void list_tail_remove(node*& head_ptr);
