@@ -1,0 +1,208 @@
+// This is the implementation file for the template class: keyed_bag
+// See interface of keyed_bag in template_keyed_bag.h
+//
+// @Author: Adnan Hashem Mohamed
+//
+// CLASS INVARIANT:
+//	1- head_ptr_ is a pointer to a linked list of pairs
+//	2- many_elements_ holds the number of elements in the bag
+//
+// Since this file is the implementation of a template class, it is included in template_keyed_bag.h
+
+#include<utility>
+#include<string>
+#include"template_node.h"
+
+namespace template_keyed_bag_adnan
+{
+	template<class key_type, class v_type>
+	keyed_bag<key_type, v_type>::keyed_bag()
+	{
+		many_elements_ = 0;
+		head_ptr_ = NULL;
+	}
+
+	template<class key_type, class v_type>
+	keyed_bag<key_type, v_type>::keyed_bag(const key_type& key, const v_type& value)
+	{
+		many_elements_ = 1;
+		list_head_insert(head_ptr_, std::pair<key_type, v_type>(key, value));
+	}
+
+	template<class key_type, class v_type>
+	keyed_bag<key_type, v_type>::keyed_bag(const keyed_bag<key_type, v_type>& source)
+	{
+		many_elements_ = source.many_elements_;
+		head_ptr_ = NULL;
+		list_copy(source.head_ptr_, head_ptr_);
+	}
+	
+	template<class key_type, class v_type>
+	keyed_bag<key_type, v_type>::~keyed_bag()
+	{
+		many_elements_ = 0;
+		list_clear(head_ptr_);
+	}
+	
+	template<class key_type, class v_type>
+	keyed_bag<key_type, v_type> keyed_bag<key_type, v_type>::operator=(const keyed_bag<key_type, v_type>& rhs)
+	{
+		if (this != &rhs)
+		{
+			many_elements_ = rhs.many_elements_;
+			list_clear(head_ptr_);
+			list_copy(rhs.head_ptr_, head_ptr_);
+		}
+		return *this;
+	}
+
+	template<class key_type, class v_type>
+	bool keyed_bag<key_type, v_type>::is_item(const key_type& key) const
+	{
+		for (auto cursor = head_ptr_; cursor != NULL; cursor = cursor->link())
+		{
+			if (cursor->data().first == key)
+				return true;
+		}
+		return false;
+	}
+
+	template<class key_type, class v_type>
+	void keyed_bag<key_type, v_type>::insert(const key_type& key, const v_type& value)
+	{
+		// If there is no pair with the given key, create a new pair
+		if (!is_item(key))
+		{
+			list_head_insert(head_ptr_, std::pair<key_type, v_type>(key, value));
+			many_elements_++;
+			return;
+		}
+
+		// In the case which there is a pair which has the specified key, override the 
+		// old value with the new value.
+		for (auto cursor = head_ptr_; cursor != NULL; cursor = cursor->link())
+		{
+			if (cursor->data().first == key)
+				cursor->set_data(std::pair<key_type, v_type>(key, value));
+		}
+	}
+
+	template<class key_type, class v_type>
+	void keyed_bag<key_type, v_type>::remove(const key_type& key)
+	{
+		assert(is_item(key));
+		for (auto cursor = head_ptr_; cursor != NULL; cursor = cursor->link())
+		{
+			if (cursor->data().first == key)
+			{
+				cursor->set_data(head_ptr_->data());
+				list_head_remove(head_ptr_);
+				many_elements_--;
+				return;
+			}
+			
+		}
+	}
+
+	template<class key_type, class v_type>
+	typename keyed_bag<key_type, v_type>::size_type keyed_bag<key_type, v_type>::count(const v_type& value) const
+	{
+		size_type count = 0;
+
+		for (auto cursor = head_ptr_; cursor != NULL; cursor = cursor->link())
+		{
+			if (cursor->data().second == value)
+				count++;
+		}
+		return count;
+	}
+
+	template<class key_type, class v_type>
+	v_type keyed_bag<key_type, v_type>::value(const key_type& key) const
+	{
+		assert(is_item(key));
+		for (auto cursor = head_ptr_; cursor != NULL; cursor = cursor->link())
+		{
+			if (cursor->data().first == key)
+				return cursor->data().second;
+		};
+	}
+
+	template<class key_type, class v_type>
+	v_type keyed_bag<key_type, v_type>::operator[](const key_type& key)const
+	{
+		assert(is_item(key));
+		for (auto cursor = head_ptr_; cursor != NULL; cursor = cursor->link())
+		{
+			if (cursor->data().first == key)
+				return cursor->data().second;
+		}
+	}
+
+	template<class key_type, class v_type>
+	v_type& keyed_bag<key_type, v_type>::operator[](const key_type& key)
+	{
+		assert(is_item(key));
+		for (auto cursor = head_ptr_; cursor != NULL; cursor = cursor->link())
+		{
+			if (cursor->data().first == key)
+				return cursor->data().second;
+		}
+	}
+
+	template<class key_type, class v_type>
+	bool operator==(const keyed_bag<key_type, v_type>& b1, const keyed_bag<key_type, v_type>& b2)
+	{
+		// if different size then not equal bags
+		if (b1.size() != b2.size())
+			return false;
+		for (auto it = b1.begin(); it != b1.end(); ++it)
+		{
+			if (!b2.is_item((*it).first) || b1[(*it).first] != b2[(*it).first])
+				return false;
+		}
+
+		return true;
+	}
+	
+	template<class key_type, class v_type>
+	bool operator!=(const keyed_bag<key_type, v_type>& b1, const keyed_bag<key_type, v_type>& b2)
+	{
+		return !(b1 == b2);
+	}
+
+	template<class key_type, class v_type>
+	keyed_bag<key_type, v_type> operator+(const keyed_bag<key_type, v_type>& b1, const keyed_bag<key_type, v_type>& b2)
+	{
+		keyed_bag<key_type, v_type> b3(b1);
+		for (auto it = b2.begin(); it != b2.end(); ++it)
+		{
+			if (!b3.is_item((*it).first))
+				b3.insert((*it).first, (*it).second);
+		}
+		return b3;
+	}
+	
+	template<class key_type, class v_type>
+	keyed_bag<key_type, v_type> operator-(const keyed_bag<key_type, v_type>& b1, const keyed_bag<key_type, v_type>& b2)
+	{
+		keyed_bag<key_type, v_type> b3(b1);
+		for (auto it = b2.begin(); it != b2.end(); ++it)
+		{
+			if (b3.is_item((*it).first))
+				b3.remove((*it).first);
+		}
+		return b3;
+	}
+
+	template<class key_type, class v_type>
+	void print_bag(const keyed_bag<key_type, v_type>& k_bag)
+	{
+		for (auto it = k_bag.begin(); it != k_bag.end(); ++it)
+		{
+			std::cout << "(key: " << (*it).first << ", value: " << (*it).second << ")" << std::endl;
+		}
+	}
+
+
+} // end of namespace
