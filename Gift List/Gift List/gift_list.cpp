@@ -4,13 +4,15 @@
 // @Author: Adnan Hashem Mohamed
 //
 // CLASS INVARIANT (gift_list):
-//
+//	1- list_ is the list of person associated with his/her list of gifts
+
 
 #include"gift_list.h"
 #include<string>
 
 
 namespace gift_list_adnan {
+
 
 	void Name::format_name(std::string& name)
 	{
@@ -165,21 +167,21 @@ namespace gift_list_adnan {
 		return false;
 	}
 
-	// for debugging
-	void print_list(const gift_list& the_list)
+	void print_list(std::ostream& outs, const gift_list& the_list)
 	{
 		gift_list::gifts_bag my_list = the_list.get_list();
 		for (auto it = my_list.begin(); it != my_list.end(); ++it)
 		{
-			std::cout << "Name: ";
-			std::cout << (*it).first << "\n";
-			std::cout << "Gifts: ";
+			outs << "-----------------------\n";
+			outs << "Name: ";
+			outs << (*it).first << "\n\n";
+			outs << "Gifts: ";
 			for (auto i = 0; i < (*it).second.size(); ++i)
 			{
-				std::cout << (*it).second[i].first << "| ";
+				outs << (*it).second[i].first << "| ";
 			}
-			std::cout<<std::endl;
-			std::cout << "-----------------------\n";
+			outs<<std::endl;
+			outs << "-----------------------\n";
 		}
 	}
 

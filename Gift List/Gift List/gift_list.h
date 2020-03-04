@@ -74,6 +74,11 @@
 //
 //  size_type size()const
 //	 Postcondition: returns the number of people this gift_list contains
+//
+// NON-MEMBER FUNCTIONS:
+//	void print_list(std::ostream& outs, const gift_list&)
+//	 Postcondition: prints the gift_list by displaying each person and his/her gifts to where outs is connected.
+//
 
 #ifndef GIFT_LIST_H
 #define GIFT_LIST_H
@@ -139,8 +144,8 @@ namespace gift_list_adnan
 		gifts_bag list_;
 	};
 
-	// FOR DEBUGGING
-	void print_list(const gift_list&);
+	void print_list(std::ostream& outs, const gift_list&);
+	
 }
 
 
