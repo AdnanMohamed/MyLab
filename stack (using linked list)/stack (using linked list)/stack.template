@@ -29,6 +29,7 @@ namespace stack_adnan{
 	template<class Item>
 	void stack<Item>::pop()
 	{
+		assert(!empty());
 		list_head_remove(top_ptr);
 	}
     
