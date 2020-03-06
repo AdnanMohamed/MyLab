@@ -1,0 +1,52 @@
+// @Author: Adnan Mohamed
+//
+// The implementation file for the template class: stack.
+// See interface in stack.h
+// 
+// CLASS INVARIANT:
+//  1. The items in the stack are stored in a linked list, 
+//     with the top of the stack stored at the head node, 
+//	   down to the bottom of the stack at the tail node. 
+//  2. The member variable top_ptr is the head pointer of the linked list of items.
+
+//#include"node//template_node.h"
+#include<cassert> // Provides assert
+
+namespace stack_adnan{
+	
+	template<class Item>
+	stack<Item>::stack(const stack<Item>& source)
+	{
+		list_copy(source.top_ptr, top_ptr);
+	}
+
+	template<class Item>
+    void stack<Item>::push(const Item& entry)
+	{
+		list_head_insert(top_ptr, entry);
+	}
+    
+	template<class Item>
+	void stack<Item>::pop()
+	{
+		list_head_remove(top_ptr);
+	}
+    
+	template<class Item>
+	void stack<Item>::operator =(const stack<Item>& source)
+	{
+		if(this != &source)
+		 {
+			list_clear(top_ptr);
+			list_copy(source.top_ptr, top_ptr);
+		 }
+	}
+
+	template<class Item>
+	Item stack<Item>::top() const
+	 {
+		assert(top_ptr != NULL);
+		return top_ptr->data();
+	 }
+
+} // end of namespace
