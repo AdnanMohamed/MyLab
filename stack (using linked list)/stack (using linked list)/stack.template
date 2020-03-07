@@ -44,10 +44,55 @@ namespace stack_adnan{
 	}
 
 	template<class Item>
-	Item stack<Item>::top() const
+	Item& stack<Item>::top()
 	 {
 		assert(top_ptr != NULL);
 		return top_ptr->data();
+	 }
+
+	template<class Item>
+	const Item& stack<Item>::top() const
+	 {
+		assert(top_ptr != NULL);
+		return top_ptr->data();
+	 }
+
+	 template<class Item>
+	 Item stack<Item>::seek(size_type n)const
+	 {
+	    assert(n < size());
+		auto element = begin();
+		for(int i = 0; i < n; ++i)
+		{
+			++element;
+		}
+		return *element;
+	 }
+
+	 template<class Item>
+	 void stack<Item>::top_down(std::ostream& outs)const
+	 {
+		if(size() == 0)
+			return;
+		for(auto element = begin(); element != end(); ++element)
+		{
+			outs<<*element<<std::endl;
+		}
+	 }
+
+     template<class Item>
+	 void stack<Item>::down_top(std::ostream& outs)const
+	 {
+		if(size() == 0)
+		  return;
+		
+		// push the elements to a temp stack so they be ready to read from top to bottum
+		stack<Item>temp;
+		for(auto element = begin(); element != end(); ++element)
+		{
+			temp.push(*element);
+		}
+		temp.top_down(outs);
 	 }
 
 } // end of namespace

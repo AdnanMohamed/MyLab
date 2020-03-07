@@ -1,4 +1,5 @@
-// @ Authors: Main and Savitch.
+// @ Main Authors: Savitch and Main.
+// @ Co-Author: Adnan Hashem Mohamed
 //
 // FILE: stack2.h (part of the namespace stack_adnan)
 // TEMPLATE CLASS PROVIDED: stack<Item> (a stack of items)
@@ -8,6 +9,10 @@
 //   with a default constructor, a copy constructor, and an assignment
 //   operator. The definition stack<Item>::size_type is the data type of
 //   any variable that keeps track of how many items are in a stack.
+//
+//  ITERATORS:
+//   stack<Item>::iterator 
+//   stack<Item>::const_iterator 
 //
 // CONSTRUCTOR for the stack<Item> template class:
 //   stack( )
@@ -22,6 +27,16 @@
 //     Precondition: size( ) > 0.
 //     Postcondition: The top item of the stack has been removed.
 //
+//   Item& top()
+//     Precondition: size() > 0.
+//     Postcondition: returns a reference to the top element of the stack.
+//     Could be used to change the top or just to access the top element.
+//
+//   const Item& top( ) const
+//     Precondition:  size() > 0.
+//     Postcondition: returns a constant reference to the top element.
+//     Cannot change the top element of the stack.
+//
 // CONSTANT MEMBER FUNCTIONS for the stack<Item> class:
 //   bool empty( ) const
 //     Postcondition: Return value is true if the stack is empty.
@@ -29,11 +44,25 @@
 //   size_type size( ) const
 //     Postcondition: Return value is the total number of items in the stack.
 //
-//   Item top( )
-//     Precondition: size( ) > 0.
-//     Postcondition: The return value is the top item of the stack (but the
-//     stack is unchanged. This differs slightly from the STL stack (where
-//     the top function returns a reference to the item on top of the stack).
+//   Item seek(size_type n = 1)const; 
+//     Precondition: n < size( ). 
+//     Postcondition: The return value is the item that is n from the top 
+//     (with the top at n = 0, the next at n = 1, and so on). The stack is not changed.
+//
+//   void top_down(std::ostream&)const
+//     Postcondition: prints the stack elements from top to down to the outstream
+//
+//   void down_top(std::ostream&)const
+//     Postcondition: prints the stack elements from down to top to the outstream
+//
+// ITERATOR TOOLKIT:
+//   iterator begin()
+//     Postcondition: returns an iterator to the top element of the stack
+//   iterator end()
+//     Postcondition: returns an iterator indicating the position past the last element.
+//  
+//   const_iterator begin() const   ---) CONST VERSIONS of begin() and end()
+//   const_iterator end() const     ---) Same functionality but ACCESS ONLY.
 //
 // VALUE SEMANTICS for the stack<Item> class:
 //   Assignments and the copy constructor may be used with stack<Item>
@@ -57,6 +86,8 @@ namespace stack_adnan
         // TYPEDEFS 
         typedef std::size_t size_type;
         typedef Item value_type;
+        typedef template_node_adnan::node_iterator<Item> iterator;
+        typedef template_node_adnan::const_node_iterator<Item> const_iterator;
         // CONSTRUCTORS and DESTRUCTOR
         stack() { top_ptr = NULL; }
         stack(const stack& source);
@@ -65,13 +96,24 @@ namespace stack_adnan
         void push(const Item& entry);
         void pop();
         void operator =(const stack& source);
+        Item& top();
         // CONSTANT MEMBER FUNCTIONS
         size_type size() const
         {
             return template_node_adnan::list_length(top_ptr);
         }
         bool empty() const { return (top_ptr == NULL); }
-        Item top() const;
+        const Item& top() const;
+        Item seek(size_type n = 1) const;
+        void top_down(std::ostream&)const;
+        void down_top(std::ostream&)const;
+        // Iterator toolkit
+
+        iterator begin() { return top_ptr; }
+        iterator end() { return NULL; }
+        const_iterator begin() const{ return top_ptr; }
+        const_iterator end() const { return NULL; }
+
     private:
         template_node_adnan::node<Item>* top_ptr;  // Points to top of stack
     };
