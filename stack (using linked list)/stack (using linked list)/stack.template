@@ -95,4 +95,47 @@ namespace stack_adnan{
 		temp.top_down(outs);
 	 }
 
+	 template<class Item>
+	 bool operator ==(const stack<Item>& lhs, const stack<Item>& rhs)
+	 {
+		// sizes have to be the same
+		if(lhs.size() != rhs.size())
+		   return false;
+
+		// compare each element on both stacks
+		for(int i = 0; i < lhs.size(); ++i)
+		{
+			if(lhs.seek(i) != rhs.seek(i))
+			  return false;
+		}
+
+		return true;
+	 }
+
+	 template<class Item>
+	 bool operator !=(const stack<Item>& lhs, const stack<Item>& rhs)
+	 {
+		return !(lhs == rhs);
+	 }
+
+	 template<class Item>
+	 void stack<Item>::swap(stack& s)
+	 {
+		auto temp = top_ptr;
+		top_ptr = s.top_ptr;
+		s.top_ptr = temp;
+	 }
+     
+	 template<class Item>
+	 void stack<Item>::flip()
+	 {
+		template_node_adnan::node<Item>* new_top = NULL;
+		
+		for(auto element = begin(); element != end(); ++element)
+			list_head_insert(new_top, *element);
+		
+		list_clear(top_ptr);
+		top_ptr = new_top;
+	 }
+
 } // end of namespace

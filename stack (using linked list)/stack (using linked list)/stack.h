@@ -32,10 +32,12 @@
 //     Postcondition: returns a reference to the top element of the stack.
 //     Could be used to change the top or just to access the top element.
 //
-//   const Item& top( ) const
-//     Precondition:  size() > 0.
-//     Postcondition: returns a constant reference to the top element.
-//     Cannot change the top element of the stack.
+//   void swap(stack&)
+//     Postcondition: elements of the parameter becomes the elements of the calling stack and vise versa
+//
+//   void flip()
+//     Postcondition: x activates flip, x should contain the same items, 
+//     but the order of those items has been reversed.
 //
 // CONSTANT MEMBER FUNCTIONS for the stack<Item> class:
 //   bool empty( ) const
@@ -48,6 +50,11 @@
 //     Precondition: n < size( ). 
 //     Postcondition: The return value is the item that is n from the top 
 //     (with the top at n = 0, the next at n = 1, and so on). The stack is not changed.
+//
+//   const Item& top( ) const
+//     Precondition:  size() > 0.
+//     Postcondition: returns a constant reference to the top element.
+//     Cannot change the top element of the stack.
 //
 //   void top_down(std::ostream&)const
 //     Postcondition: prints the stack elements from top to down to the outstream
@@ -63,6 +70,18 @@
 //  
 //   const_iterator begin() const   ---) CONST VERSIONS of begin() and end()
 //   const_iterator end() const     ---) Same functionality but ACCESS ONLY.
+//
+//  NON-MEMBER FUNCTIONS:
+//   template<class Item>
+//   bool operator ==(const stack<Item>&, const stack<Item>&)
+//     Postcondition: returns true if the compared stacks are identical.
+//     identical means: top element of 1st stack == top of 2nd stack,
+//     2nd element of 1st stack == 2nd element of 2nd stack and so on.
+//
+//   template<class Item>
+//   bool operator !=(const stack<Item>&, const stack<Item>&)
+//     Postcondition: returns true if the nth element in stack1 differs
+//     with the nth element in stack2
 //
 // VALUE SEMANTICS for the stack<Item> class:
 //   Assignments and the copy constructor may be used with stack<Item>
@@ -97,6 +116,8 @@ namespace stack_adnan
         void pop();
         void operator =(const stack& source);
         Item& top();
+        void swap(stack&);
+        void flip();
         // CONSTANT MEMBER FUNCTIONS
         size_type size() const
         {
@@ -107,6 +128,13 @@ namespace stack_adnan
         Item seek(size_type n = 1) const;
         void top_down(std::ostream&)const;
         void down_top(std::ostream&)const;
+        
+        // NON-MEMBER FUNCTIONS
+        template<class Item>
+        friend bool operator ==(const stack<Item>&, const stack<Item>&);
+
+        template<class Item>
+        friend bool operator !=(const stack<Item>&, const stack<Item>&);
         // Iterator toolkit
 
         iterator begin() { return top_ptr; }
