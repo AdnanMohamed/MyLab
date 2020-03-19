@@ -79,7 +79,6 @@ namespace queue_adnan
 	{
 		if(this != &source)
 		{
-			rear_ptr = NULL;
 			list_clear(front_ptr);
 			count = source.count;
 			list_copy(source.front_ptr, front_ptr, rear_ptr);
