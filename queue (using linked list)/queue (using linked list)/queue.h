@@ -62,7 +62,7 @@ namespace queue_adnan
         // MODIFICATION MEMBER FUNCTIONS
         void pop();
         void push(const Item& entry);
-        void operator =(const queue<Item>& source);
+        queue<Item>& operator =(const queue<Item>& source);
         // CONSTANT MEMBER FUNCTIONS
         bool empty() const { return (count == 0); }
         Item front() const;

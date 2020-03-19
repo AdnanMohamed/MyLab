@@ -74,5 +74,17 @@ namespace queue_adnan
 		list_copy(source.front_ptr, front_ptr, rear_ptr);
 	}
 
+	template<class Item>
+	queue<Item>& queue<Item>::operator =(const queue<Item>& source)
+	{
+		if(this != &source)
+		{
+			rear_ptr = NULL;
+			list_clear(front_ptr);
+			count = source.count;
+			list_copy(source.front_ptr, front_ptr, rear_ptr);
+		}
+		return *this;
+	}
 
 }
