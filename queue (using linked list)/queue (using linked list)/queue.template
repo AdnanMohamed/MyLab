@@ -44,8 +44,17 @@ namespace queue_adnan
 	template <class Item>
 	void queue<Item>::push(const Item& entry)
 	{
-		rear_ptr = new template_node_adnan::node<Item>(entry, NULL);
-		list_tail_attach(front_ptr, entry);
+		if (empty( )) 
+		{ 
+			list_head_insert(front_ptr, entry); 
+			rear_ptr = front_ptr; 
+		} 
+		else 
+		{ 
+			//Insert an entry that is not the first. 
+			list_insert(rear_ptr, entry); 
+			rear_ptr = rear_ptr->link( ); 
+		} 
 		++count;
 	}
 
