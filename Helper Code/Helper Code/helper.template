@@ -1,0 +1,36 @@
+// This is the implementation file for the general reusable code which
+// might be helpful in future programs.
+// See interface in helper.h
+//
+// @Author: Adnan H. Mohamed
+//
+ 
+#include<cmath>
+namespace helper_adnan{
+
+   template<class Item>
+   int binary_search(Item arr[], int size, const Item& target)
+   {
+       int first = 0;
+       int last = size - 1;
+       int middle = floor((first + last)/2.);
+       while(first != last && arr[middle] != target)
+       {
+           if(arr[middle] < target)
+           {
+             first = middle + 1;
+             middle = floor((first + last)/2.);
+           }
+           else if(target < arr[middle])
+           {
+             last = middle - 1;
+             middle = floor((first + last)/2.);
+           }
+       }
+       if(arr[middle] == target)
+        return middle;
+       else
+        return -1;
+   }
+
+} // end of namespace
