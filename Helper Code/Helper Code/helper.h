@@ -30,6 +30,15 @@
 //	 Precondition: Item is any type that has the = operator
 //	 Postcondition: e1 and e2 are swapped.
 //
+//	template<class Item>
+//	bool sorted(Item arr[], int size, bool Ascend = true)
+//	 Precondition: Item has < operator
+//	 Ascend determines whether the elements of arr sorted from 
+//	 least to greatest or vise versa
+//	 Postcondition: If Ascend is set to true the return value is true if and
+//	 only if the elements in the array are sorted least to greatest else false.
+//	 If Ascend is set to false, the return value is true if and only if
+//	 the elements in the array are in descendent order (else false)
 #ifndef HELPER_CODE
 #define HELPER_CODE
 
@@ -44,6 +53,9 @@ namespace helper_adnan {
 
 	template<class Item>
 	void swap(Item& e1, Item& e2);
+
+	template<class Item>
+	bool sorted(Item arr[], int size, bool Ascend = true);
 
 } // end of namespace
 

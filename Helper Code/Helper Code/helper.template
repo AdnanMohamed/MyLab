@@ -4,16 +4,21 @@
 //
 // @Author: Adnan H. Mohamed
 //
- 
-#include<cmath>
+
+#include<cassert> // Provides assert()
+#include<cmath> // Provides floor()
 namespace helper_adnan{
 
    template<class Item>
    int binary_search(Item arr[], int size, const Item& target)
    {
+       // The array should be sorted in ascending order
+       assert(sorted(arr, size));
+       
        int first = 0;
        int last = size - 1;
        int middle = floor((first + last)/2.);
+
        while(first != last && arr[middle] != target)
        {
            if(arr[middle] < target)
@@ -43,7 +48,7 @@ namespace helper_adnan{
 
    template<class Item>
    void bubble_sort(Item arr[], int size, bool Ascend)
-   {
+   { 
      int index = 0;
      if(Ascend) // sort from least to greatest such that ( E0 <= E1 <=...<= En )
      {
@@ -73,5 +78,28 @@ namespace helper_adnan{
      }
      
    }
+
+   	template<class Item>
+	bool sorted(Item arr[], int size, bool Ascend)
+    {
+       if(Ascend)
+       {
+         for(int i=0; i < size - 1; ++i)
+         {
+            if(arr[i + 1] < arr[i])
+                return false;
+         }
+         return true;
+       }
+       else
+       {
+         for(int i=0; i < size - 1; ++i)
+         {
+            if(arr[i + 1] > arr[i])
+                return false;
+         }
+         return true;        
+       }
+    }
 
 } // end of namespace
