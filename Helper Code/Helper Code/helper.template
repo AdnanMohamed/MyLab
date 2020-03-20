@@ -33,4 +33,45 @@ namespace helper_adnan{
         return -1;
    }
 
+   template<class Item>
+   void swap(Item& e1, Item& e2)
+   {
+     Item temp = e1;
+     e1 = e2;
+     e2 = temp;
+   }
+
+   template<class Item>
+   void bubble_sort(Item arr[], int size, bool Ascend)
+   {
+     int index = 0;
+     if(Ascend) // sort from least to greatest such that ( E0 <= E1 <=...<= En )
+     {
+        while(index < size - 1)
+        {
+          for(int i = index; i < size - 1; ++i)
+          {
+            if(arr[i+1] < arr[i])
+                swap(arr[i+1], arr[i]);
+          }
+          --size;
+        }
+     
+     }
+     
+     else // sort from least to greatest such that ( E0 >= E1 >=...>= En )
+     {
+        while(index < size - 1)
+        {
+          for(int i = index; i < size - 1; ++i)
+          {
+            if(arr[i+1] > arr[i])
+                swap(arr[i+1], arr[i]);
+          }
+          --size;
+        }        
+     }
+     
+   }
+
 } // end of namespace
