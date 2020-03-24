@@ -1,0 +1,230 @@
+// This is the implementation file for the template class deque<Item>
+// See interface in deque.h
+//
+// --------- Copyright © ---------
+// @Author: Adnan Hashem Mohamed
+//--------------------------------
+// 
+// CLASS INVARIANT:
+//	1- 'first' is the pointer to the first element in the deque.
+//	2- 'last' is the pointer to the last element in the deque.
+//	3- 'count': holds the number of nodes in the deque.
+
+#include<cstdlib> // Provides size_t
+#include"d_list.h" // Provides template_dlist_adnan
+#include<cassert> // Provides assert()
+
+namespace deque_adnan{
+
+template<class Item>	
+deque<Item>::deque()
+{
+	first = NULL; last = NULL;
+	count = 0;
+}
+
+template<class Item>
+Item deque<Item>::front()const
+{
+	assert(!empty());
+	return first->data();
+}
+
+template<class Item>
+Item deque<Item>::back()const
+{
+	assert(!empty());
+	return last->data();
+}
+
+template<class Item>
+Item& deque<Item>::front()
+{
+	assert(!empty());
+	return first->data();
+}
+
+template<class Item>
+Item& deque<Item>::back()
+{
+	assert(!empty());
+	return last->data();
+}
+
+template<class Item>
+void deque<Item>::push_back(const Item& element)
+{
+	// CASE: First node to be added.
+	if(empty())
+	{
+		list_head_insert(first, element);
+		last = first;
+		++count;
+		return ;
+	}
+	template_dlist_adnan::list_insert(last, element);
+	// move the pointer to the last node.
+	last = last->front_link();
+	++count;
+}
+
+template<class Item>
+void deque<Item>::pop_back()
+{
+	assert(!empty());
+	last = last->rear_link();
+	list_tail_remove(first);
+	--count;
+}
+
+template<class Item>
+Item deque<Item>::operator[](int index)const
+{
+	assert(index >= 0 && index < size());
+	return list_locate(first, index + 1)->data();
+}
+
+template<class Item>
+Item& deque<Item>::operator[](int index)
+{
+	assert(index >= 0 && index < size());
+	return list_locate(first, index + 1)->data();
+}
+
+template<class Item>
+deque<Item>::deque(const deque& source)
+{
+	first = NULL; last = NULL;
+	count = source.count;
+	list_copy(source.first, first, last);
+}
+
+template<class Item>
+void deque<Item>::push_front(const Item& element)
+{
+	list_head_insert(first, element);
+	count++;
+	// CASE: The first node to be added, both pointers point to the first element
+	if(count == 1)
+	  last = first;
+}
+
+template<class Item>
+void deque<Item>::pop_front()
+{
+	assert(!empty());
+	list_head_remove(first);
+	--count;
+	// CASE: There all items are removed
+	if(count == 0)
+	last = first;
+}
+
+template<class Item>
+deque<Item>& deque<Item>::operator =(const deque<Item>& source)
+{
+	// CASE: Self Assignment prevention
+	if(this != &source)
+	{
+		list_clear(first);
+		count = source.count;
+		list_copy(source.first, first, last);
+	}
+
+	return *this;
+}
+
+template<class Item>
+void deque<Item>::insert(iterator& it, const Item& element)
+{
+	// CASE: 'it' is pointing to the first element.
+	if(it == begin())
+	 {
+		push_front(element);
+		it = begin();
+		return;
+	 }
+	 else if(it == end()) // pointing to just beyond the last element by one place.
+	 {
+		push_back(element);
+		it = last;
+		return;
+	 }
+	list_insert(it->rear_link(), element);
+	--it;
+	count++;
+}
+
+template<class Item>
+void deque<Item>::insert(iterator& it, size_type n, const Item& element)
+{
+	// NEGATIVE IS NOT ALLOWED
+	assert(n < SIZE_MAX);
+
+	// CASE: 'it' is pointing to the first element.
+	if(it == begin())
+	 {
+		while(n != 0)
+		{
+			push_front(element);
+			--n;
+		}
+		it = end();
+		return;
+	 }
+	 else if(it == end()) // pointing to just beyond the last element by one place.
+	 {
+		while(n != 0)
+		{
+			push_back(element);
+			--n;
+		}
+		it = end();
+		return;
+	 }
+
+	 while(n != 0)
+	  {
+		list_insert(it->rear_link(), element);
+		count++;
+		--n;
+	  }
+	  it = end();
+}
+
+template<class Item>
+void deque<Item>::insert(iterator& it, const deque& the_deque)
+{
+	for(size_type i = 0; i < the_deque.size(); ++i)
+	{
+		insert(it, the_deque[i]);
+		++it;
+	}
+}
+
+
+template<class Item>
+bool operator ==(const deque<Item>& d1, const deque<Item>& d2)
+{
+	// If different sizes this means d1 != d2;
+	if(d1.size() == d2.size())
+	{
+		for(std::size_t i = 0; i < d1.size(); ++i)
+			{
+				if(d1[i] != d2[i])
+					return false;
+			}
+		return true;
+	}
+	return false;
+}
+
+template<class Item>
+bool operator !=(const deque<Item>& d1, const deque<Item>& d2)
+{
+	return !(d1 == d2);
+}
+
+
+
+} // end of namespace

@@ -187,6 +187,8 @@
 //   If there is insufficient dynamic memory, then the following functions throw
 //   bad_alloc: the constructor, list_head_insert, list_insert, list_copy.
 
+#include <cstdlib>   // Provides NULL and size_t
+#include <iterator>  // Provides iterator and forward_iterator_tag
 
 #ifndef DOUBLY_LINKED_LIST_H
 #define DOUBLY_LINKED_LIST_H
@@ -246,6 +248,11 @@ namespace template_dlist_adnan
             current = initial;
         }
         Item& operator *() const
+        {
+            return current->data();
+        }
+
+        Item& operator *()
         {
             return current->data();
         }

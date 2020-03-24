@@ -71,6 +71,12 @@
 //	  Postcondition: n elements will be inserted the place where 'it' was pointing.
 //    'it' will be invalid.
 //
+//   void insert(iterator& it, const deque& the_deque)
+//	  Precondition: 'it' is a valid deque iterator.
+//	  Postcondition: the_deque will be inserted where 'it' was pointing.
+//	  The elements starting from the one 'it' was pointing to will be after
+//	  the_deque elements. The iterator 'it' will be invalid iterator.
+//
 // CAPACITY FUNCTIONS:
 //	 size_type size()const
 //	  Postcondition: The number of elements in the deque is returned
@@ -103,12 +109,12 @@ namespace deque_adnan {
 		// TYPE-DEFS:
 		typedef Item value_type;
 		typedef std::size_t size_type;
-		typedef template_dlist_adnan::node_iterator iterator;
-		typedef template_dlist_adnan::const_node_iterator const_iterator;
+		typedef template_dlist_adnan::node_iterator<Item> iterator;
+		typedef template_dlist_adnan::const_node_iterator<Item> const_iterator;
 
 		deque();
 		deque(const deque& source);
-		~deque() { template_dlist_adnan::list_clear(head_ptr); }
+		~deque() { template_dlist_adnan::list_clear(first); }
 
 		// ACCESSORS
 		Item front()const;
@@ -127,14 +133,15 @@ namespace deque_adnan {
 		void push_front(const Item& element);
 		void pop_back();
 		void pop_front();
-		void insert(iterator it, const Item& element);
-		void insert(iterator it, size_type n, const Item& element);
+		void insert(iterator& it, const Item& element);
+		void insert(iterator& it, size_type n, const Item& element);
+		void insert(iterator& it, const deque& the_deque);
 
 		// ITERATORS:
-		iterator begin() { return first; }
-		const_iterator begin()const { return first; }
-		iterator end() { return NULL; }
-		const_iterator end()const { return NULL; }
+		iterator begin() { return iterator(first); }
+		const_iterator begin()const { return const_iterator(first); }
+		iterator end() { return iterator(); }
+		const_iterator end()const { return const_iterator(); }
 
 		// ASSIGNMENT:
 		deque& operator =(const deque& source);
@@ -151,7 +158,9 @@ namespace deque_adnan {
 		size_type count;
 	};
 
-}
+} // end of namespace
+
+#include"deque.template"
 
 #endif // !DEQUE_H
 
