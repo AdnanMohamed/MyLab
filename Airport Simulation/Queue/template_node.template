@@ -1,0 +1,229 @@
+// This is the implementation file for the template class node
+// and some other functions used in general with linked lists
+// The class node is in the header file: template_node.h
+//
+// @Author: Adnan Mohamed
+
+#include<iostream>
+#include<cassert>
+
+namespace template_node_adnan {
+    
+    template<class Item>
+    std::size_t list_length(const node<Item>* head_ptr)
+    {
+        size_t count = 0;
+        const node<Item>* cursor = head_ptr;
+        while (cursor != NULL)
+        {
+            count++;
+            cursor = cursor->link();
+        }
+
+        return count;
+    }
+
+    template <class Item>
+    void list_head_insert(node<Item>*& head_ptr, const Item& entry)
+    {
+	    head_ptr = new node<Item>(entry, head_ptr);
+    }
+
+    template <class Item>
+    void list_head_remove(node<Item>*& head_ptr)
+    {
+        assert(head_ptr != NULL);
+
+        node<Item>* temp = new node<Item>;
+        temp = head_ptr;
+        head_ptr = head_ptr->link();
+        delete temp;
+    }
+
+    template <class Item>
+    void list_clear(node<Item>*& head_ptr)
+    {
+        while (head_ptr != NULL)
+        {
+            list_head_remove(head_ptr);
+        }  
+    }
+
+    template <class Item>
+    void list_copy(const node<Item>* source_ptr, node<Item>*& head_ptr, node<Item>*& tail_ptr)
+    {
+        if (source_ptr == NULL)
+        {
+            head_ptr = NULL;
+            tail_ptr = NULL;
+            return;
+        }
+
+        list_head_insert(head_ptr, source_ptr->data());
+        tail_ptr = head_ptr;
+        source_ptr = source_ptr->link();
+
+        while (source_ptr != NULL)
+        {
+            list_insert(tail_ptr, source_ptr->data());
+            source_ptr = source_ptr->link();
+            tail_ptr = tail_ptr->link();
+        }
+    }
+
+    template <class Item>
+    void list_copy
+    (const node<Item>* source_ptr, node<Item>*& head_ptr)
+    {
+        for(auto cursor = source_ptr; cursor != NULL; cursor = cursor->link())
+            list_tail_attach(head_ptr, cursor->data());
+    }
+
+    template <class Item>
+    void list_tail_attach(node<Item>*& head_ptr, const Item& entry)
+    {
+        if (head_ptr == NULL) // If the list is empty this will be the first node
+        {
+            list_head_insert(head_ptr, entry);
+            return;
+        }
+        node<Item>* new_node = new node<Item>(entry, NULL); // creates the new node to be attached
+        auto cursor = head_ptr;
+        while (cursor->link() != NULL)  // moves the cursor to the tail of the list
+        {
+            cursor = cursor->link();
+        }
+        cursor->set_link(new_node);
+    }
+
+    template <class Item>
+    void list_insert(node<Item>* previous_ptr, const Item& entry)
+    {  
+        node<Item>* new_node = new node<Item>(entry, previous_ptr->link());
+        previous_ptr->set_link(new_node);
+    }
+
+    template <class NodePtr, class SizeType>
+    NodePtr list_locate(NodePtr head_ptr, SizeType position)
+    {
+        if (head_ptr == NULL || position < 1)
+            return NULL;
+        while (position > 1)
+        {
+            if(head_ptr == NULL)        // In case position > number of nodes in the list 
+                return NULL;            // this will protect from trying to access NULL.
+            head_ptr = head_ptr->link();
+            --position;
+        }
+        return head_ptr;
+    }
+
+    template <class Item>
+    void list_remove(node<Item>* previous_ptr)
+    {
+       assert(previous_ptr->link() != NULL);
+       
+       node<Item>* temp = new node<Item>;
+       temp = previous_ptr->link();
+       previous_ptr->set_link(temp->link());
+       delete temp;
+    }
+    
+    template <class NodePtr, class Item>
+    NodePtr list_search(NodePtr head_ptr, const Item& target)
+    {
+        while (head_ptr != NULL)
+        {
+            if (head_ptr->data() == target)
+                return head_ptr;
+            head_ptr = head_ptr->link();
+        }
+        return NULL;
+    }
+
+    template <class Item>
+    void list_piece(const node<Item>* start_ptr, const node<Item>* end_ptr,
+            node<Item>*& head_ptr, node<Item>*& tail_ptr)
+    {
+        if (start_ptr == NULL || start_ptr == end_ptr)
+        {
+            head_ptr = NULL;
+            tail_ptr = NULL;
+            return;
+        }
+
+        list_head_insert(head_ptr, start_ptr->data());
+        tail_ptr = head_ptr;
+        start_ptr = start_ptr->link();
+
+        while (start_ptr != end_ptr)
+        {
+            list_insert(tail_ptr, start_ptr->data());
+            start_ptr = start_ptr->link();
+            tail_ptr = tail_ptr->link();
+        }
+
+    }
+
+    template <class Item>
+    std::size_t list_occurrences(const node<Item>* head_ptr, const Item& target)
+    {
+        size_t count = 0;
+        for (auto cursor = head_ptr; cursor != NULL; cursor = cursor->link())
+        {
+            if (cursor->data() == target)
+            {
+                ++count;
+            }
+        }
+        return count;
+    }
+
+    template <class Item>
+    void list_tail_remove(node<Item>*& head_ptr)
+    {
+        // Assuming not empty list
+        assert(head_ptr != NULL);
+
+        // If one node in the list, remove it.
+        if (head_ptr->link() == NULL)
+        {
+            list_head_remove(head_ptr);
+            return;
+        }
+
+        node<Item>* temp = new node<Item>;
+        auto cursor = head_ptr;
+        // moves the cursor to the node before the tail
+        while (cursor->link()->link() != NULL)
+        {
+            cursor = cursor->link();
+        }
+        temp = cursor->link();
+        cursor->set_link(NULL);
+        delete temp;
+    
+    }
+
+    template <class Item, class size_type>
+    node<Item>* list_copy_front(const node<Item>* source_ptr, size_type n)
+    {
+        assert(n <= list_length(source_ptr) && n >= 0);
+
+        node<Item>* head_ptr = NULL;
+        if (n == 0)
+            return head_ptr;
+        // insert the first node
+        list_head_insert(head_ptr, source_ptr->data());
+        source_ptr = source_ptr->link();
+        --n;
+        for (size_t i = 0; i < n; ++i, source_ptr = source_ptr->link())
+        {
+            list_tail_attach(head_ptr, source_ptr->data());
+        }
+
+        return head_ptr;
+    
+    }
+
+} // end of namespace

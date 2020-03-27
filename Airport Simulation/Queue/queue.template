@@ -1,0 +1,95 @@
+// FILE: queue.template
+//
+// @Author: Adnan Hashem Mohamed
+//
+// TEMPLATE CLASS IMPLEMENTED: queue<Item> (see queue.h for documentation)
+// This file is included in the header file, and not compiled separately.
+// INVARIANT for the queue class:
+//   1. The number of items in the queue is stored in the member variable
+//      count.
+//   2. The items in the queue are stored in a linked list, with the front of
+//      the queue stored at the head node, and the rear of the queue stored at
+//      the final node.
+//   3. The member variable front_ptr is the head pointer of the linked list of
+//      items. For a non-empty queue, the member variable rear_ptr is the
+//      tail pointer of the linked list; for an empty list, we don't care
+//      what's stored in rear_ptr.
+
+#include"queue.h"
+#include"template_node.h"
+
+namespace queue_adnan
+{
+	template <class Item>
+	queue<Item>::queue()
+	{
+		front_ptr = NULL;
+		rear_ptr = NULL;
+		count = 0;
+	}
+
+	template <class Item>
+	queue<Item>::~queue()
+	{
+		list_clear(front_ptr);
+	}
+
+	template<class Item>
+	void queue<Item>::pop()
+	{
+		list_head_remove(front_ptr);
+		--count;
+	}
+
+	template <class Item>
+	void queue<Item>::push(const Item& entry)
+	{
+		if (empty( )) 
+		{ 
+			list_head_insert(front_ptr, entry); 
+			rear_ptr = front_ptr; 
+		} 
+		else 
+		{ 
+			//Insert an entry that is not the first. 
+			list_insert(rear_ptr, entry); 
+			rear_ptr = rear_ptr->link( ); 
+		} 
+		++count;
+	}
+
+	template<class Item>
+	Item queue<Item>::front() const
+	{
+		assert(!empty());
+		return (front_ptr->data());
+	}
+
+	template<class Item>
+	queue<Item>::queue(const queue<Item>& source)
+	{
+		front_ptr = NULL;
+		rear_ptr = NULL;
+		count = source.count;
+		list_copy(source.front_ptr, front_ptr, rear_ptr);
+	}
+
+	template<class Item>
+	queue<Item>& queue<Item>::operator =(const queue<Item>& source)
+	{
+		if(this != &source)
+		{
+			list_clear(front_ptr);
+			count = source.count;
+			list_copy(source.front_ptr, front_ptr, rear_ptr);
+		}
+		return *this;
+	}
+
+	template<class Item>
+	Item queue<Item>::back() const
+	{
+		assert(!empty());
+		return rear_ptr -> data();
+	}
+}
