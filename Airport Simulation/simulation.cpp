@@ -8,11 +8,9 @@
 //  (5) the average time that a plane spent in the landing queue.
 
 #include"Airport.h"
-#include"Priority Queue/priority_queue.h"
 #include"Queue/queue.h"
-#include<cstdlib> // Provides RANDMAX
 
-using std::cout; using std::endl; using priority_queue_adnan::priority_queue;
+using std::cout; using std::endl;
 using queue_adnan::queue; using namespace airport_adnan;
 
 
