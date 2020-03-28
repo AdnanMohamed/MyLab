@@ -3,7 +3,7 @@
 //
 // @Authors: Main and Savitch
 //
-// TEMPLATE PARAMETER, TYPEDEFS and MEMBER CONSTANTS for the stack<Item> class:
+// TEMPLATE PARAMETER, TYPEDEFS and MEMBER CONSTANTS for the queue<Item> class:
 //   The template parameter, Item, is the data type of the items in the queue,
 //   also defined as queue<Item>::value_type. It may be any of the C++ built-in
 //   types (int, char, etc.), or a class with a default constructor, a copy
@@ -38,13 +38,17 @@
 //   size_type size( ) const
 //     Postcondition: The return value is the total number of items in the queue.
 //
+//   Item back()const
+//     Precondition: The queue is not empty
+//     Postcondition: The return value is the rear element in the queue
+//
 // VALUE SEMANTICS for the queue<Item> template class:
 //   Assignments and the copy constructor may be used with queue<Item> objects.
 
 #ifndef MAIN_SAVITCH_QUEUE2_H     // Prevent duplicate definition
 #define MAIN_SAVITCH_QUEUE2_H
 #include <cstdlib>   // Provides std::size_t
-#include "template_node.h"   // Node template class
+#include "template_node.h"   // node template class
 
 namespace queue_adnan
 {
@@ -67,6 +71,7 @@ namespace queue_adnan
         bool empty() const { return (count == 0); }
         Item front() const;
         size_type size() const { return count; }
+        Item back()const;
 
     private:
         template_node_adnan::node<Item>* front_ptr;

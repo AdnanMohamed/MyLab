@@ -20,7 +20,7 @@
 //   
 //
 //  **NOTE: Item could be any type (char, int, double..) which has the following operator:
-//      ( <, ==, !=, = )
+//      ( <, <=, >, >=, ==, !=, = )
 //   DEFAULT PRIORITY: for the following elements: e1, e2, e3.
 //   if e1 <= e2 <= e3, e1 will be first in the priority_queue and e3 will be last.
 //
@@ -119,7 +119,9 @@ namespace priority_queue_adnan {
         void pop();
         void push(const Item& entry);
         void reverse();
-        
+        Item& front();
+        Item& back();
+
         // CONSTANT MEMBER FUNCTIONS
         bool empty() const { return (count == 0); }
         Item front() const;

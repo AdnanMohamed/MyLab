@@ -137,7 +137,7 @@ namespace string_adnan
         size_t count(char ch);
         // CONSTANT MEMBER FUNCTIONS
         size_t length() const { return current_length; }
-        char operator [ ](size_t position) const;
+        char operator [](size_t position) const;
         // FRIEND FUNCTIONS
         friend std::ostream& operator <<(std::ostream& outs, const string& source);
         friend bool operator ==(const string& s1, const string& s2);

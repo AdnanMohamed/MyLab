@@ -1,6 +1,6 @@
 // This header file contains class node and some 
 // linked lists toolkit functions
-// The class Node and the helping functions are within namespace node_adnan
+// The class node and the helping functions are within namespace node_adnan
 // @Author: Main and Savitch
 
 // TYPEDEF for the node class:

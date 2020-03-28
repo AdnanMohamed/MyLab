@@ -34,17 +34,19 @@ public:
     char& operator[](int);        //Accessor/Modifier                                                               
     char operator[](int)const;    //Accessor                                                                        
     int     capacity()const;      //Max chars that can be stored (not including null terminator)                    
-    int     length()const;        //Number of char in string                                                        
-    String  operator+(const String&)  const; //Concatenation                                                                   
-    bool    operator==(const String&)  const;
-    bool    operator<(const String&)  const;
+    int     length()const;        //Number of char in string  
+    String  substr(int, int)                const;  //The sub-string from staring position to ending position
+    int     findch(int, char)              const;  //Find location of charater starting at a position
+    int     findstr(int, const String&)     const;  //Find location of str starting at a position
+    String  operator+(const String&)  const; //Concatenation
+    bool operator==(const String&)  const;
+    bool operator<(const String&)  const;
 
     friend  std::istream& operator>>(std::istream&, String&);
     friend  std::ostream& operator<<(std::ostream&, const String&);
 
 private:
     char str[STRING_SIZE];
-    int length_; // stores the length of the string.
 };
 
 String  operator+       (const char[], const String&);

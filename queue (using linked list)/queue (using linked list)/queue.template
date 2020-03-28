@@ -86,4 +86,10 @@ namespace queue_adnan
 		return *this;
 	}
 
+	template<class Item>
+	Item queue<Item>::back() const
+	{
+		assert(!empty());
+		return rear_ptr -> data();
+	}
 }

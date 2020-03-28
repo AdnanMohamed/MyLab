@@ -1,7 +1,15 @@
 .vs/Airport Simulation/
 Debug/
-Airport Simulation Planner.docx
+Airport Simulation1/x64/
+Airport Simulation1/.vs/Airport Simulation1/
+Airport Simulation1/Debug/
+Airport Simulation1/Airport Simulation Planner.docx
 Airport Simulation.sln
-*vcx*
-test.cpp
-to_improve.txt
+Airport Simulation1/*vcx*
+Airport Simulation1/test.cpp
+Airport Simulation1/to_improve.txt
+Airport Simulation2/Airport Simulation2/
+Airport Simulation2/Debug/
+Airport Simulation2/*vcx*
+Airport Simulation2/bugs
+Airport Simulation2/test.cpp

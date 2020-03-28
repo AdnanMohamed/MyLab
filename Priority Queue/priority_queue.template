@@ -127,6 +127,20 @@ namespace priority_queue_adnan{
 	}
 
 	template<class Item>
+	Item& priority_queue<Item>::front()
+	{
+		assert(!empty());
+		return (first_ptr->data());
+	}
+
+	template<class Item>
+	Item& priority_queue<Item>::back()
+	{
+		assert(!empty());
+		return last_ptr -> data();
+	}
+
+	template<class Item>
 	void priority_queue<Item>::reverse()
 	{
 		//CASE: empty, only reverse priority

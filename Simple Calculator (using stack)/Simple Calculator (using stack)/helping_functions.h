@@ -30,6 +30,29 @@ namespace calc_adnan {
 	// is encountered, e.g., numbers.size() < 2, or operation is not '+', '-', '*'
 	// or '/', or division by 0.0 occurs, then the return is false otherwise returns true.
 
+	bool evaluate_infix(std::string expression, double& answer); // Note: This works for fully paranthasized expressions ONLY.
+	// Precondition: expression is a valid infix expression
+	// Postcondition: if the expression is evaluated then answer
+	// will hold the value of the evaluation the function returns true.
+	// Else if the expression was not valid or another issue occures such as
+	// division by zero then answer is not changed and the function returns false.
+
+	bool evaluate_postfix(std::string expression, double& answer);
+	// Precondition: expression is a valid postfix expression
+	// Postcondition: if the expression is evaluated then answer
+	// will hold the value of the evaluation the function returns true.
+	// Else if the expression was not valid or another issue occures such as
+	// division by zero then answer is not changed and the function returns false.
+
+	std::string infix_to_postfix(const std::string& infix);
+	// Precondition: infix is a valid FULLY PARANTHASIZED infix expression.
+	// Postcondition: The equivalent postfix is returned.
+
+	bool higher_equal(char op1, char op2);
+	// Precondtion: op1 and op2 are one of the operators: "*+-/"
+	// Postcondition: if op1 is of higher OR equal precedence than op2
+	// the function returns true else returns false.
+
 } // end of namespace
 
 #endif // !HELPING_FUNCTIONS_H
