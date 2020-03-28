@@ -1,0 +1,209 @@
+// This is the implementation for the template class: priority_queue<Item, P>
+// Interface is in: priority_queue.h
+/*
+--------- Copyrights© ----------
+  @Author: Adnan Hashem Mohamed
+  --------------------------------
+*/
+// ------------------------------------------
+// CLASS INVARIANT:
+//   1- template_dlist_adnan::node<Item>* first_ptr;
+//		  The pointer to the first element in the priority_queue
+//   2- template_dlist_adnan::node<Item>* last_ptr;
+//	      The pointer to the last element in the priority_queue
+//   3- bool priority_smallest
+//        true means the smallest element is of highest priority
+//		  else the highest priority for the largest element.
+//   4- size_type count;       
+//      Total number of items in the priority_queue
+// ------------------------------------------------
+//
+
+#include<cstdlib> // Provides std::size_t
+#include "D_List/d_list.h" // node template class
+#include<cassert> // Provides assert()
+
+namespace priority_queue_adnan{
+	
+
+	template<class Item>
+	priority_queue<Item>::priority_queue(const priority_queue<Item>& source)
+	{
+		first_ptr = NULL;
+		last_ptr = NULL;
+		count = source.count;
+		priority_smallest_ = source.priority_smallest_;
+		list_copy(source.first_ptr, first_ptr, last_ptr);
+	}
+
+	template<class Item>
+	priority_queue<Item>& priority_queue<Item>::operator =(const priority_queue<Item>& source)
+	{
+		if (this != &source)
+		{
+			list_clear(first_ptr);
+			count = source.count;
+			list_copy(source.first_ptr, first_ptr, last_ptr);
+		}
+		return *this;
+	}
+
+	template<class Item>
+	void priority_queue<Item>::pop()
+	{
+		assert(!empty());
+		list_head_remove(first_ptr);
+		--count;
+	}
+
+	template <class Item>
+	void priority_queue<Item>::push(const Item& entry)
+	{
+		// CASE: FIRST PUSH
+		if(empty())
+		{
+			list_head_insert(first_ptr, entry);
+			last_ptr = first_ptr;
+			count++;
+			return;
+		}
+		
+		if ((priority_smallest() && front() >= entry) ||
+			(!priority_smallest() && front() <= entry))
+		{ 
+			list_head_insert(first_ptr, entry); 
+			count++;
+			return;
+		} 
+		else 
+		{ 
+			//Insert an entry that is not the first.
+			
+			// CASE: PRIORITY FOR SMALLEST
+			if(priority_smallest())
+			{
+				for(auto cursor = first_ptr; cursor != NULL; cursor = cursor->front_link())
+				{
+					if(cursor->data() >= entry)
+					{
+						list_insert(cursor->rear_link(), entry);
+						count++;
+						return;
+					}
+				}
+			}
+			else    // PRIORITY FOR LARGEST
+			{
+				for(auto cursor = first_ptr; cursor != NULL; cursor = cursor->front_link())
+				{
+					if(cursor->data() <= entry)
+					{
+						list_insert(cursor->rear_link(), entry);
+						count++;
+						return;
+					}
+				}
+			}
+
+			// CASE: it has to be added at the end
+			list_insert(last_ptr, entry); 
+			last_ptr = last_ptr->front_link( ); 
+			count++;
+		} 
+	}
+
+	template<class Item>
+	Item priority_queue<Item>::front() const
+	{
+		assert(!empty());
+		return (first_ptr->data());
+	}
+
+	template<class Item>
+	Item priority_queue<Item>::back() const
+	{
+		assert(!empty());
+		return last_ptr -> data();
+	}
+
+	template<class Item>
+	Item& priority_queue<Item>::front()
+	{
+		assert(!empty());
+		return (first_ptr->data());
+	}
+
+	template<class Item>
+	Item& priority_queue<Item>::back()
+	{
+		assert(!empty());
+		return last_ptr -> data();
+	}
+
+	template<class Item>
+	void priority_queue<Item>::reverse()
+	{
+		//CASE: empty, only reverse priority
+		if(empty())
+		{
+		  priority_smallest_ = !priority_smallest_;
+		  return;
+		}
+
+		// for each element swap the front link with the back link.
+		for(auto cursor = first_ptr->front_link(); cursor != NULL; cursor = cursor->front_link())
+		{
+			swap(cursor->rear_link()->front_link(), cursor->rear_link()->rear_link());
+		}
+		// swap the front/back links for the last element.
+		// now the queue is reversed.
+		swap(last_ptr->front_link(), last_ptr->rear_link());
+
+		// swap the first/last ptrs so the first_ptr points
+		// to the new first element and last_ptr to the new last element 
+		swap(first_ptr, last_ptr);
+
+		// Reverse the priority criteria
+		priority_smallest_ = !priority_smallest_;
+	}
+
+	template<class Item>
+	bool operator ==(const priority_queue<Item>& p_queue1, const priority_queue<Item>& p_queue2)
+	{
+		// NOT SAME SIZE, !=
+		if(p_queue1.size() != p_queue2.size())
+			return false;
+		for(auto it = p_queue1.begin(), it2 = p_queue2.begin(); it != p_queue1.end(); ++it, ++it2)
+		{
+			if(*it != *it2)
+			  return false;
+		}
+		
+		return true;
+	}
+
+	template<class Item>
+	bool operator !=(const priority_queue<Item>& p_queue1, const priority_queue<Item>& p_queue2)
+	{
+		return !(p_queue1 == p_queue2);
+	}
+
+	template<class Item>
+    priority_queue<Item> merge(const priority_queue<Item>& p_queue1, const priority_queue<Item>& p_queue2)
+	{
+		priority_queue<Item> merged_pq(p_queue1);
+		for(auto element: p_queue2)
+			merged_pq.push(element);
+
+		return merged_pq;
+	}
+
+   template<class Item>
+   void swap(Item& e1, Item& e2)
+   {
+     Item temp = e1;
+     e1 = e2;
+     e2 = temp;
+   }
+
+} // end of namespace (priority_queue_adnan)
