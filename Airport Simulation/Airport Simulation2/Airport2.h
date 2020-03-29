@@ -1,5 +1,5 @@
-﻿// header file containing class: Plane and helping functions for the airport simulation.
-// Plane and functions are within namespace (airport2_adnan)
+﻿// header file containing class: Plane Arguments. Also it has helping functions for the airport simulation.
+// Plane, Arguments and functions are within namespace (airport2_adnan)
 /*
 -------- Copyright © ---------
   @Author: Adnan Hashem Mohamed
@@ -7,7 +7,34 @@
 -------------------------------
 */
 //  ****    DOCUMENTATION   *****
-// 
+//
+// --- CLASS Arguments ---
+// CONSTRUCTOR:
+//  Arguments(
+//    double landing_time = LAND_TIME,
+//    double dep_time = DEP_TIME,
+//    double dep_prob = MIN_PROBABILITY,
+//    double land_prob = MIN_PROBABILITY,
+//    double total_time = TOTAL_SIMULATION_TIME
+//   )throw(std::invalid_argument())
+//     Postcondition: The object is initialized with the specified arguments.
+//     EXCEPTION: throws an exception if any of the arguments are less than the allowed minimum.
+//
+// Arguments(std::vector<double>args)throw(std::invalid_argument, std::size_t)
+//  Precondition: args has the following arguments in this order:
+//  landing_time, dep_time, dep_prob, land_prob, total_time
+//  Postcondition: the members are set to have the specified arguments.
+//  EXCEPTION: throws the size of args if size != number of arguments specified above.
+//  throws an exception with a message using std::invalid_argument for any invalid element in args
+//
+// ACCESSORS FOR THE PERMITED BOUNDS FOR THE ARGUMENTS IN THE CONSTRUCTOR:
+//  int min_landing_time()const
+//  int min_dep_time()const
+//  int min_probability()const
+//  int max_probability()const
+//  int min_simulation_time()const
+//  int number_of_args()const
+//
 // CLASS Plane
 //  CONSTRUCTOR:
 //   Plane(double time = 0, double fuel = 0, double consumption = 1 )
@@ -85,6 +112,7 @@
 #define AIRPORT2_H
 
 #include"../Priority Queue/priority_queue.h"
+#include<vector>
 
 namespace airport2_adnan {
 
@@ -125,6 +153,51 @@ namespace airport2_adnan {
     double give_fuel(double min = 400, double max = 7000);
     double engine_consumption_generator(double min = .7, double max = 2);
     std::size_t consume_fuel(priority_queue_adnan::priority_queue<Plane>& planes, double seconds = 1);
+
+
+    void validate_commands(int argc, char* argv[]);
+    
+    class Arguments{
+    public:
+        Arguments(
+            double landing_time = LAND_TIME,
+            double dep_time = DEP_TIME,
+            double dep_prob = MIN_PROBABILITY,
+            double land_prob = MIN_PROBABILITY,
+            double total_time = TOTAL_SIMULATION_TIME
+        )throw(std::invalid_argument);
+
+        Arguments(std::vector<double>args)throw(std::invalid_argument, std::size_t);
+
+        // ACCESSORS:
+        double get_landing_time()const { return landing_time_; }
+        double get_dep_time()const { return dep_time_; }
+        double get_dep_probability()const { return dep_prob_; }
+        double get_land_probability()const { return land_prob_; }
+        double get_total_time()const { return total_simulation_time_; }
+
+
+        // ACCESSORS FOR THE CONSTANTS:
+        int min_landing_time()const { return LAND_TIME; }
+        int min_dep_time()const { return DEP_TIME; }
+        int min_probability()const { return MIN_PROBABILITY; }
+        int max_probability()const { return MAX_PROBABILITY; }
+        int min_simulation_time()const { return TOTAL_SIMULATION_TIME; }
+        int number_of_args()const { return VALID_ARGUMENTS; }
+
+    private:
+        double landing_time_;                        //  All 
+        double dep_time_;                            //  in
+        double dep_prob_;                            //  S
+        double land_prob_;                           //  E
+        double total_simulation_time_;               //  C
+        static const int LAND_TIME = 540;            //  O
+        static const int DEP_TIME = 300;             //  N
+        static const int TOTAL_SIMULATION_TIME = 350;//  D
+        static const int MIN_PROBABILITY = 0;        
+        static const int MAX_PROBABILITY = 1;    
+        static const int VALID_ARGUMENTS = 5;
+    };
 }
 
 

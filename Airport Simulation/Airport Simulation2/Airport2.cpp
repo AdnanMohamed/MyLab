@@ -13,6 +13,7 @@
 #include"Airport2.h"
 #include<climits> // Provides UINT_MAX
 #include<cassert> // Provides assert()
+#include<vector>
 
 namespace airport2_adnan {
 
@@ -123,6 +124,63 @@ namespace airport2_adnan {
         }
 
         return count;
+    }
+
+    Arguments::Arguments(double landing_time, double dep_time,
+        double dep_prob, double land_prob, double total_time)throw(std::invalid_argument)
+    {
+        if (landing_time < min_landing_time())
+            throw(std::invalid_argument("landing time is less than the minimum."));
+        else if(dep_time < min_dep_time())
+            throw(std::invalid_argument("departure time is less than the minimum."));
+        else if(dep_prob < MIN_PROBABILITY)
+            throw(std::invalid_argument("Probability of planes coming to departure is < 0."));
+        else if(land_prob < MIN_PROBABILITY)
+            throw(std::invalid_argument("Probability of planes coming to landing queue is < 0."));
+        else if(dep_prob > MAX_PROBABILITY)
+            throw(std::invalid_argument("Probability of planes coming to departure is > 1."));
+        else if(land_prob > MAX_PROBABILITY)
+            throw(std::invalid_argument("Probability of planes coming to landing is  > 1."));
+        else if(total_time < TOTAL_SIMULATION_TIME)
+            throw(std::invalid_argument("Simulation time is less than the minimum."));
+        else
+        {
+            landing_time_ = landing_time;
+            dep_time_ = dep_time;
+            dep_prob_ = dep_prob;
+            land_prob_ = land_prob;
+            total_simulation_time_ = total_time;
+        }
+    }
+
+    Arguments::Arguments(std::vector<double>args)throw(std::invalid_argument, std::size_t)
+    {
+        if (args.size() != VALID_ARGUMENTS)
+            throw args.size();
+        int i = 0;
+        if (args[i++] < min_landing_time())
+            throw(std::invalid_argument("landing time is less than the minimum."));
+        else if (args[i++] < min_dep_time())
+            throw(std::invalid_argument("departure time is less than the minimum."));
+        else if (args[i] < MIN_PROBABILITY)
+            throw(std::invalid_argument("Probability of planes coming to departure is < 0."));
+        else if (args[i++] > MAX_PROBABILITY)
+            throw(std::invalid_argument("Probability of planes coming to departure is > 1."));
+        else if (args[i] < MIN_PROBABILITY)
+            throw(std::invalid_argument("Probability of planes coming to landing queue is < 0."));
+        else if (args[i++] > MAX_PROBABILITY)
+            throw(std::invalid_argument("Probability of planes coming to landing is  > 1."));
+        else if (args[i] < TOTAL_SIMULATION_TIME)
+            throw(std::invalid_argument("Simulation time is less than the minimum."));
+        else
+        {
+            i = 0;
+            landing_time_ = args[i++];
+            dep_time_ = args[i++];
+            dep_prob_ = args[i++];
+            land_prob_ = args[i++];
+            total_simulation_time_ = args[i];
+        }
     }
 
 

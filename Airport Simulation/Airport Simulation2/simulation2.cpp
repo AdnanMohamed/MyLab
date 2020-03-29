@@ -1,6 +1,13 @@
 // This program simulates a one - runway airport. Airplanes arrives and departures on
-// one runway. This program takes the input for a particular simulation then 
-// OUTPUTS the following info.:-
+// one runway. This program takes the input for a particular simulation from a text file.
+// input file format:
+//	one number at each row representing the following:
+//	1- time it takes for landing (in seconds)
+//	2- time it takes for departure (in seconds)
+//	3- The probability of a plane arriving for departure.
+//	4- The probability of a plane arriving for landing.
+//	5- total simulation time. (in seconds)
+//	then OUTPUTS the following info.:-
 //	(1) The number of planes that took off in the simulated time; 
 //	(2) the number of planes that landed in the simulated time;
 //  (3) the number of planes that crashed because they ran out of fuel before they could land;
@@ -12,17 +19,23 @@
 #include"../Queue/queue.h"
 #include"../Priority Queue/priority_queue.h"
 #include<iostream>
+#include<fstream> // Provides istream
 #include<ctime> // Provides time()
+#include<vector>
 
 using std::cout; using std::endl;
 using queue_adnan::queue; using namespace airport_adnan;
 using priority_queue_adnan::priority_queue; using namespace airport2_adnan;
 
 
-void airport_simulation(double land_time, double dep_time,
-	double dep_probability, double land_probability, double total_time);
+void validate_commands(int argc, int right, const char usage[]);
 
-int main()
+void read_data(char file_name[], Arguments& arguments);
+
+void airport_simulation(const Arguments& args);
+
+
+int main(int argc, char* argv[])
 {
 
 	// Simulating the runway with landing time: 22 min, departure time: 14 min,
@@ -32,17 +45,24 @@ int main()
 	// Total simulation time: 23:59:59
 
 	srand(time(NULL));
+	validate_commands(argc, 2, "Usage: program_name file_name.txt");
+	Arguments args; // The arguments for the simulation.
 	
-	airport_simulation(1500, 840, 1 / 900., 1/1500., 86399);
+	read_data(argv[1], args);
+	
+	
+	airport_simulation(args);
 }
 
-void airport_simulation(double land_time, double dep_time,
-	double dep_probability, double land_probability, double total_time)
+void airport_simulation(const Arguments& args)
 {
 	
 	queue<unsigned long int>departures;			// This is the queue for depaturing airplanes' timestamps.
 	priority_queue<Plane> landing;		  // This priority queue is for landing planes
-	runway airport_runway(dep_time, land_time);
+	double land_time = args.get_landing_time(), dep_time = args.get_dep_time();
+	double land_probability = args.get_land_probability(), dep_probability = args.get_dep_probability();
+	double total_time = args.get_total_time();
+	runway airport_runway(args.get_dep_time(), args.get_landing_time());
 	averager departure_waiting;	 // holds the waiting times for the departured planes.
 	averager landing_waiting;    // holds the waiting times for the landing planes.
 	unsigned long int next_plane_dep;
@@ -111,6 +131,57 @@ void airport_simulation(double land_time, double dep_time,
 }
 	
 
+void validate_commands(int argc, int right, const char usage[])
+{
+	try {
+		if (argc != right)
+			throw argc;
+	}
+	catch (int e)
+	{
+		cout << e << " arguments given, while " << right << " are expected.\n";
+		cout << usage << endl;
+		cout << "In visual studio only give the input_file.txt as command line argument.\n";
+		exit(1);
+	}
 
+}
+
+void read_data(char file_name[], Arguments& arguments)
+{
+	try {
+		std::ifstream in;
+		in.open(file_name);
+		if (in.fail())
+		{
+			cout << "Failed opening \"" << file_name << "\"" << endl;
+			exit(1);
+		}
+
+		// read the input data
+		std::vector<double> data;
+		double next;
+		for (size_t i = 0; !in.eof(); i++)
+		{
+			in >> next;
+			data.push_back(next);
+		}
+		in.close();
+		Arguments args(data);
+		arguments = args;
+	}
+	catch (std::size_t s)
+	{
+		cout << Arguments().number_of_args() << " should be the number of arguments.\n"
+			<< "The file has: " << s << endl;
+		exit(1);
+	}
+	catch (const std::invalid_argument & e)
+	{
+		cout << "Error: " << e.what() << endl;
+		cout << "Exiting Program." << endl;
+		exit(1);
+	}
+}
 
 
