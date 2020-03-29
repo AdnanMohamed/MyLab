@@ -1,0 +1,7 @@
+landing time: 1500
+departure time: 840
+departure probability: 0.000925925
+landing probability: 0.00047619
+total simulation time: 86399
+landing/departure profit: 7.4
+plane crash loss: -255
