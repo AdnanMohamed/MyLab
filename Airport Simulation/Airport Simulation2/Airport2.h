@@ -1,4 +1,4 @@
-﻿// header file containing class: Plane Arguments. Also it has helping functions for the airport simulation.
+﻿// header file containing class: Plane , Arguments. Also it has helping functions for the airport simulation.
 // Plane, Arguments and functions are within namespace (airport2_adnan)
 /*
 -------- Copyright © ---------
@@ -15,7 +15,9 @@
 //    double dep_time = DEP_TIME,
 //    double dep_prob = MIN_PROBABILITY,
 //    double land_prob = MIN_PROBABILITY,
-//    double total_time = TOTAL_SIMULATION_TIME
+//    double total_time = TOTAL_SIMULATION_TIME,
+//    double profit_per_plane = 10,
+//    double crash_loss = 255
 //   )throw(std::invalid_argument())
 //     Postcondition: The object is initialized with the specified arguments.
 //     EXCEPTION: throws an exception if any of the arguments are less than the allowed minimum.
@@ -150,12 +152,9 @@ namespace airport2_adnan {
         double min_fuel_ = 1e-6; // exceptable calculation error bound due to double inaccuracy.
     };
 
-    double give_fuel(double min = 400, double max = 7000);
+    double give_fuel(double min = 2000, double max = 11000);
     double engine_consumption_generator(double min = .7, double max = 2);
     std::size_t consume_fuel(priority_queue_adnan::priority_queue<Plane>& planes, double seconds = 1);
-
-
-    void validate_commands(int argc, char* argv[]);
     
     class Arguments{
     public:
@@ -164,7 +163,9 @@ namespace airport2_adnan {
             double dep_time = DEP_TIME,
             double dep_prob = MIN_PROBABILITY,
             double land_prob = MIN_PROBABILITY,
-            double total_time = TOTAL_SIMULATION_TIME
+            double total_time = TOTAL_SIMULATION_TIME,
+            double profit_per_plane = 10,
+            double crash_loss = 255
         )throw(std::invalid_argument);
 
         Arguments(std::vector<double>args)throw(std::invalid_argument, std::size_t);
@@ -175,7 +176,8 @@ namespace airport2_adnan {
         double get_dep_probability()const { return dep_prob_; }
         double get_land_probability()const { return land_prob_; }
         double get_total_time()const { return total_simulation_time_; }
-
+        double get_profit()const { return profit_; }
+        double get_crash_loss()const { return crash_loss_; }
 
         // ACCESSORS FOR THE CONSTANTS:
         int min_landing_time()const { return LAND_TIME; }
@@ -186,17 +188,19 @@ namespace airport2_adnan {
         int number_of_args()const { return VALID_ARGUMENTS; }
 
     private:
-        double landing_time_;                        //  All 
-        double dep_time_;                            //  in
-        double dep_prob_;                            //  S
-        double land_prob_;                           //  E
-        double total_simulation_time_;               //  C
-        static const int LAND_TIME = 540;            //  O
-        static const int DEP_TIME = 300;             //  N
-        static const int TOTAL_SIMULATION_TIME = 350;//  D
+        double landing_time_;                        //  seconds 
+        double dep_time_;                            //  seconds
+        double dep_prob_;                              
+        double land_prob_;                             
+        double total_simulation_time_;               //  seconds
+        double profit_;                              // in thousands $
+        double crash_loss_;                          // in thousands $
+        static const int LAND_TIME = 540;            //  seconds
+        static const int DEP_TIME = 300;             //  seconds
+        static const int TOTAL_SIMULATION_TIME = 350;//  seconds
         static const int MIN_PROBABILITY = 0;        
         static const int MAX_PROBABILITY = 1;    
-        static const int VALID_ARGUMENTS = 5;
+        static const int VALID_ARGUMENTS = 7;
     };
 }
 

@@ -1,18 +1,22 @@
 // This program simulates a one - runway airport. Airplanes arrives and departures on
 // one runway. This program takes the input for a particular simulation from a text file.
 // input file format:
-//	one number at each row representing the following:
-//	1- time it takes for landing (in seconds)
-//	2- time it takes for departure (in seconds)
-//	3- The probability of a plane arriving for departure.
-//	4- The probability of a plane arriving for landing.
-//	5- total simulation time. (in seconds)
+//--------------------------
+//	 landing time: SECONDS
+//	 departure time: SECONDS
+//	 departure probability: DECIMAL
+//	 landing probability: DECIMAL
+//	 total simulation time: SECONDS
+//	 landing / departure profit: (in thousand $)
+//	 plane crash loss: (in thousands)
+//  -------------------------
 //	then OUTPUTS the following info.:-
 //	(1) The number of planes that took off in the simulated time; 
 //	(2) the number of planes that landed in the simulated time;
 //  (3) the number of planes that crashed because they ran out of fuel before they could land;
 //  (4) the average time that a plane spent in the takeoff queue; 
 //  (5) the average time that a plane spent in the landing queue.
+//	(6) profit or loss generated.
 
 #include"../Airport Simulation1/Airport.h"
 #include"Airport2.h"
@@ -27,6 +31,11 @@ using std::cout; using std::endl;
 using queue_adnan::queue; using namespace airport_adnan;
 using priority_queue_adnan::priority_queue; using namespace airport2_adnan;
 
+double total_profit_loss(std::size_t crashed_planes, unsigned int landed_departured_planes,
+	double crash_cost, double landing_dap_rate);
+	// Precondition: crash_cost, landing_dep_rate is $ per plane. (cost and profit in positive)
+	// Postcondition: ruturned value is the total profit or loss from the given arguments.
+	// (Negative return means loss, positive means amount of profit in $)
 
 void validate_commands(int argc, int right, const char usage[]);
 
@@ -64,6 +73,8 @@ void airport_simulation(const Arguments& args)
 	unsigned long int next_plane_dep;
 	std::size_t crashed_planes = 0;   // counts the number of planes crashing because running out of fuel due to long waiting queue
 	std::size_t total_crashed_planes = 0;
+	double profit = 0; // Profit generated from this simulation in thousands $.
+	
 	// Display initial info.
 	cout << "Each plane takes "; display_time(land_time); cout << " to land,\n";
 	display_time(dep_time); cout << " to departure.\n"
@@ -89,9 +100,18 @@ void airport_simulation(const Arguments& args)
 
 			if (!landing.empty())
 			{
-				landing_waiting.add_number(current - landing.front().timestamp());
+				// Process the landing for this plane only if the plane
+				// has sufficient fuel to make the landing.
+				if (landing.front().fuel() - (land_time * landing.front().consumption()) > 0)
+				{
+					landing_waiting.add_number(current - landing.front().timestamp());
+					airport_runway.land();
+				}
+				else
+				{
+					total_crashed_planes++;
+				}
 				landing.pop();
-				airport_runway.land();
 			}
 			else if (!departures.empty())
 			{
@@ -111,7 +131,9 @@ void airport_simulation(const Arguments& args)
 		total_crashed_planes += crashed_planes;
 	}
 
-
+	// calculate profit.
+	profit = total_profit_loss(total_crashed_planes, landing_waiting.how_many_numbers() + departure_waiting.how_many_numbers(),
+		args.get_crash_loss(), args.get_profit());
 	// Display the results:
 	cout << "Planes that departured: " << departure_waiting.how_many_numbers() << endl;
 	cout << "Planes that landed: " << landing_waiting.how_many_numbers() << endl;
@@ -123,7 +145,11 @@ void airport_simulation(const Arguments& args)
 	{
 		cout << "Average waiting time in landing line: "; display_time(landing_waiting.average()); cout << endl;
 	}
-	cout << total_crashed_planes << " planes crashed due to long waiting times in the landing queue.\n";
+	cout << total_crashed_planes << " planes crashed from lacking fuel due to long waiting queues.\n";
+	if (profit >= 0)
+		cout << "Total Profit: $" << profit <<" Thousand"<< endl;
+	else
+		cout << "Total Loss: -$" << abs(profit)<<" Thousand" << endl;
 }
 	
 
@@ -157,10 +183,16 @@ void read_data(char file_name[], Arguments& arguments)
 		// read the input data
 		std::vector<double> data;
 		double next;
-		for (size_t i = 0; !in.eof(); i++)
+		char ch;
+		in >> ch;
+		while (!in.eof())
 		{
-			in >> next;
-			data.push_back(next);
+			if (ch == ':')
+			{
+				in >> next;
+				data.push_back(next);
+			}
+			in >> ch;
 		}
 		in.close();
 		Arguments args(data);
@@ -178,6 +210,12 @@ void read_data(char file_name[], Arguments& arguments)
 		cout << "Exiting Program." << endl;
 		exit(1);
 	}
+}
+
+double total_profit_loss(std::size_t crashed_planes, unsigned int landed_departured_planes,
+	double crash_cost, double landing_dap_rate)
+{
+	return landed_departured_planes * landing_dap_rate - crashed_planes * crash_cost;
 }
 
 

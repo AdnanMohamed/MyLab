@@ -127,7 +127,8 @@ namespace airport2_adnan {
     }
 
     Arguments::Arguments(double landing_time, double dep_time,
-        double dep_prob, double land_prob, double total_time)throw(std::invalid_argument)
+        double dep_prob, double land_prob, double total_time,
+        double profit_per_plane, double crash_loss)throw(std::invalid_argument)
     {
         if (landing_time < min_landing_time())
             throw(std::invalid_argument("landing time is less than the minimum."));
@@ -143,6 +144,8 @@ namespace airport2_adnan {
             throw(std::invalid_argument("Probability of planes coming to landing is  > 1."));
         else if(total_time < TOTAL_SIMULATION_TIME)
             throw(std::invalid_argument("Simulation time is less than the minimum."));
+        else if(profit_per_plane < 0)
+            throw(std::invalid_argument("The Profit cannot be negative."));
         else
         {
             landing_time_ = landing_time;
@@ -150,6 +153,8 @@ namespace airport2_adnan {
             dep_prob_ = dep_prob;
             land_prob_ = land_prob;
             total_simulation_time_ = total_time;
+            profit_ = profit_per_plane;
+            crash_loss_ = abs(crash_loss);
         }
     }
 
@@ -170,8 +175,10 @@ namespace airport2_adnan {
             throw(std::invalid_argument("Probability of planes coming to landing queue is < 0."));
         else if (args[i++] > MAX_PROBABILITY)
             throw(std::invalid_argument("Probability of planes coming to landing is  > 1."));
-        else if (args[i] < TOTAL_SIMULATION_TIME)
+        else if (args[i++] < TOTAL_SIMULATION_TIME)
             throw(std::invalid_argument("Simulation time is less than the minimum."));
+        else if (args[i] < 0)
+            throw(std::invalid_argument("The Profit cannot be negative."));
         else
         {
             i = 0;
@@ -179,7 +186,9 @@ namespace airport2_adnan {
             dep_time_ = args[i++];
             dep_prob_ = args[i++];
             land_prob_ = args[i++];
-            total_simulation_time_ = args[i];
+            total_simulation_time_ = args[i++];
+            profit_= args[i++];
+            crash_loss_= args[i];
         }
     }
 
