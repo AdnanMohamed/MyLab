@@ -215,7 +215,7 @@ void read_data(char file_name[], Arguments& arguments)
 double total_profit_loss(std::size_t crashed_planes, unsigned int landed_departured_planes,
 	double crash_cost, double landing_dap_rate)
 {
-	return landed_departured_planes * landing_dap_rate - crashed_planes * crash_cost;
+	return landed_departured_planes * landing_dap_rate - crashed_planes * abs(crash_cost);
 }
 
 
