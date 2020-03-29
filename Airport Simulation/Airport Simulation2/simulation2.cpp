@@ -38,19 +38,15 @@ void airport_simulation(const Arguments& args);
 int main(int argc, char* argv[])
 {
 
-	// Simulating the runway with landing time: 22 min, departure time: 14 min,
-	// Max waiting time for landing plane before not having fuel: 1 hour
-	// planes arriving in the departure queue: 1 plane each 15 minutes,
-	// planes arriving in the landing queue: 1 plane each 15 minutes,
-	// Total simulation time: 23:59:59
-
 	srand(time(NULL));
 	validate_commands(argc, 2, "Usage: program_name file_name.txt");
 	Arguments args; // The arguments for the simulation.
 	
+	// read the simulation data from the given file in the command-line arguments
+	// then assign the values to args.
 	read_data(argv[1], args);
 	
-	
+	// start simulation.
 	airport_simulation(args);
 }
 
