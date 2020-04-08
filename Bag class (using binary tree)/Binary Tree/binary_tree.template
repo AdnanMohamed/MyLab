@@ -154,21 +154,21 @@ namespace binary_tree_adnan{
 	}
 
 
-	//template<class Item>
-	//std::size_t tree_depth(const binary_tree_node<Item>* root_ptr)
-	//{
-		//if(root_ptr == NULL)
-			//return 0;
-		//else
-		//{
-			//std::size_t left_depth = 1 + tree_depth(root_ptr->left());
-			//std::size_t right_depth = 1 + tree_depth(root_ptr->right());
+	template<class Item>
+	int tree_depth(const binary_tree_node<Item>* root_ptr)
+	{
+		if(root_ptr == NULL)
+			return -1;
+		else
+		{
+			std::size_t left_depth = 1 + tree_depth(root_ptr->left());
+			std::size_t right_depth = 1 + tree_depth(root_ptr->right());
 
-			//if(left_depth > right_depth)
-			//	return left_depth;
-			//else
-			//	return right_depth;
-		//}
-	//}
+			if(left_depth > right_depth)
+				return left_depth;
+			else
+				return right_depth;
+		}
+	}
 
 } // end of namespace

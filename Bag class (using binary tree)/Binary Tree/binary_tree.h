@@ -103,6 +103,13 @@
 //     Precondition: node_ptr is a pointer to a node in a binary tree (or
 //     node_ptr may be NULL to indicate the empty tree).
 //     Postcondition: The return value is the number of nodes in the tree.
+//
+//	 template<class Item>
+//	 int tree_depth(const binary_tree_node<Item>* root_ptr)
+//	   Precondition: root_ptr is a pointer to a node in a binary tree (or
+//     node_ptr may be NULL to indicate the empty tree).
+//	   Postcodition: Returns -1 for an empty tree, and 0 for a tree with a root only.
+//	   Otherwise, reuturn the largest depth of a node in the tree.
 
 #ifndef BINTREE_H
 #define BINTREE_H
@@ -171,13 +178,8 @@ namespace binary_tree_adnan
 	template <class Item>
 	std::size_t tree_size(const binary_tree_node<Item>* node_ptr);
 
-	// helper
-	//template<class Item>
-	//bool is_equal(const Item& element);
-
-	// not tested
-	//template<class Item>
-	//std::size_t tree_depth(const binary_tree_node<Item>* root_ptr);
+	template<class Item>
+	int tree_depth(const binary_tree_node<Item>* root_ptr);
 
 }
 

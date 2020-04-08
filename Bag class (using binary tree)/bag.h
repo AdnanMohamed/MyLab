@@ -61,7 +61,7 @@
 #ifndef BAG6_H 
 #define BAG6_H
 #include <cstdlib>     // Provides NULL and size_t
-#include "Binary Tree/bintree.h"
+#include "Binary Tree/binary_tree.h"
 
 namespace binary_tree_adnan
 {
@@ -86,8 +86,16 @@ namespace binary_tree_adnan
         size_type size() const { return tree_size(root_ptr); }
         size_type count(const Item& target) const;
 
-        // for debugging
+        template <class Item>
+        friend void join
+        (
+            bag<Item>& top,
+            bag<Item>& left,
+            bag<Item>& right
+        );
+                // for debugging
         void print_bag()const { print(root_ptr, 0); }
+        int depth()const { return tree_depth(root_ptr); }
     private:
         binary_tree_node<Item>* root_ptr; // Root pointer of binary search tree
         void insert_all(binary_tree_node<Item>* addroot_ptr);

@@ -13,6 +13,108 @@
 #include"Binary Tree/binary_tree.h"
 
 namespace binary_tree_adnan {
+
+    template<class Item>
+    void bag<Item>::insert_all(binary_tree_node<Item>* addroot_ptr)
+    // Precondition: addroot_ptr is a pointer to the root of a binary tree
+    // (which could be NULL indicating an empty tree).
+    // Postcondition: every descendant of addroot_ptr ( and addroot_ptr) are
+    // elements of the bag
+    {
+        // BASE-CASE(1): empty tree, do nothing
+        if(addroot_ptr != NULL)
+         {
+
+            // add the root
+            insert(addroot_ptr->data());
+            // add left_branch
+            insert_all(addroot_ptr->left());
+            // add right_branch
+            insert_all(addroot_ptr->right());
+         }
+
+    }
+
+    template <class Item>
+	void bst_remove_max(binary_tree_node<Item>*& root_ptr, Item& removed)
+	// Precondition: root_ptr is a root pointer of a non-empty binary 
+	// search tree.
+	// Postcondition: The largest item in the binary search tree has been
+	// removed, and root_ptr now points to the root of the new (smaller) 
+	// binary search tree. The reference parameter, removed, has been set 
+	// to a copy of the removed item.
+	{
+        // Base-case: The root is the only node.
+        // Remove it and save it's value
+        if(root_ptr->is_leaf())
+        {
+            removed = root_ptr->data();
+            delete root_ptr;
+            root_ptr = NULL;
+        }
+        else if(root_ptr->right() != NULL)                      // Recursive step: solve the smaller version of the problem        
+        {                                                       // by going to the right if possible (because the max is in the right side)
+            bst_remove_max(root_ptr->right(), removed);         // If not possible go to the left.
+        }
+        else
+        {
+            bst_remove_max(root_ptr->left(), removed);
+        }
+	}
+
+    template <class Item>
+	bool bst_remove(binary_tree_node<Item>*& root_ptr, const Item& target)
+	// Precondition: root_ptr is a root pointer of a binary search tree 
+	// or may be NULL for an empty tree).
+	// Postcondition: If target was in the tree, then one copy of target
+	// has been removed, and root_ptr now points to the root of the new 
+	// (smaller) binary search tree. In this case the function returns true.
+	// If target was not in the tree, then the tree is unchanged (and the
+	// function returns false).
+	{
+        // CASE1: empty tree, target can't be there
+        if(root_ptr == NULL)
+            return false;
+
+		if (root_ptr->data() < target)
+			return bst_remove(root_ptr->right(), target);  // solving a similar version of the problem with 
+		else if (target < root_ptr->data())                // the root changing to be either the right child or the left
+			return bst_remove(root_ptr->left(), target);   // depending on the target.
+		else
+		{
+            // CASE: no left child
+            // remove that node and set the root to be the "old" right child.
+			if (root_ptr->left() == NULL)
+			{
+				auto new_root = root_ptr->right();
+                delete root_ptr;
+				root_ptr = new_root;
+                return true;
+			}
+			else
+			{
+                // CASE: There is left sub-tree. Get the largest node in the left sub-tree
+                // and make it the be the node in place of the removed node.
+				bst_remove_max(root_ptr->left(), root_ptr->data());
+			}
+		}
+
+	}
+
+    template <class Item>
+	typename bag<Item>::size_type bst_remove_all
+	(binary_tree_node<Item>*& root_ptr, const Item& target)
+	// Precondition: root_ptr is a root pointer of a binary search tree 
+	// or may be NULL for an empty tree).
+	// Postcondition: All copies of target have been removed from the tree
+	// has been removed, and root_ptr now points to the root of the new 
+	// (smaller) binary search tree. The return value tells how many copies
+	// of the target were removed.
+	{
+        typename bag<Item>::size_type counter = 0;
+		while (bst_remove(root_ptr, target)){counter++;}
+        return counter;
+	}
 	
     template<class Item>
     bag<Item>::bag()
@@ -107,6 +209,49 @@ namespace binary_tree_adnan {
         return *this;
     }
 
+    template<class Item>
+    bool bag<Item>::erase_one(const Item& target)
+    {
+        return bst_remove(root_ptr, target);
+    }
 
+    template<class Item>
+    typename bag<Item>::size_type bag<Item>::erase(const Item& target)
+    {
+        return bst_remove_all(root_ptr, target);
+    }
+
+    template<class Item>
+    void bag<Item>::operator +=(const bag<Item>& addend)
+    {
+        // Avoid infinite loop created from self-addition
+        if(this == &addend)
+        {
+            auto new_root = tree_copy(addend.root_ptr);
+            insert_all(new_root);
+            tree_clear(new_root);
+        }
+        else
+            insert_all(addend.root_ptr);
+    }
+
+    template <class Item>
+    bag<Item> operator +(const bag<Item>& b1, const bag<Item>& b2)
+    {
+        auto b3(b1);
+        b3+=b2;
+        return b3;
+    }
+
+    template <class Item>
+    void join
+    (
+      bag<Item>& top,
+      bag<Item>& left,
+      bag<Item>& right
+    )
+    {
+        top += left + right;
+    }
 
 } // end of namespace
