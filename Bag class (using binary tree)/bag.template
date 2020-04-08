@@ -1,0 +1,112 @@
+// This is the implementation file for the template class: bag<Item>
+// See interface in bag.h
+//
+//	------ - Copyright © -------- -
+//	@Author: Adnan Hashem Mohamed
+//	------------------------------
+//
+// CLASS INVARIANT:
+//	1. The items in the bag are stored in a binary search tree. 
+//	2. The root pointer of the binary search tree is stored in 
+//	the member variable root_ptr (which may be NULL for an empty tree).
+//
+#include"Binary Tree/binary_tree.h"
+
+namespace binary_tree_adnan {
+	
+    template<class Item>
+    bag<Item>::bag()
+    {
+        root_ptr = NULL;
+    }
+
+    template<class Item>
+    bag<Item>::bag(const bag& source)
+    {
+        root_ptr = NULL;
+        root_ptr = tree_copy(source.root_ptr);
+    }
+
+    template<class Item>
+    bag<Item>::~bag(){tree_clear(root_ptr);}
+
+    template<class Item>
+    void bag<Item>::insert(const Item& entry)
+    {
+        // CASE: If it's an empty tree, then entry will be the value of the root
+        if(root_ptr == NULL)
+         {
+           root_ptr = new binary_tree_node<Item>(entry);
+           return;
+         }
+        
+        auto cursor = root_ptr; // this variable to traverse the tree.
+        
+        // traverse the tree, and insert the new node such that:
+        //  - for any node n, the right sub-tree of n contains the nodes which are
+        //    greater than n and the left sub-tree contains an entry with less value or equal to n.
+        while(true)
+        {
+            if(cursor->data() < entry)
+            {
+              if(cursor->right() == NULL)
+                {
+                    cursor->set_right(new binary_tree_node<Item>(entry));
+                    break;
+                }
+              else
+                cursor = cursor->right();  
+            }
+            else{
+               if(cursor->left() == NULL)
+               {
+                  cursor->set_left(new binary_tree_node<Item>(entry));  
+                  break;
+               }
+               else
+                  cursor = cursor->left(); 
+            }
+        }
+    }
+
+    template<class Item>
+    typename bag<Item>::size_type bag<Item>::count(const Item& target) const
+    {
+        auto cursor = root_ptr; // variable for traversing the tree.
+
+        // find the node which has the same value as target
+        while(cursor != NULL)
+        {
+            if(cursor->data() < target)
+                cursor = cursor->right();
+            else if(target < cursor->data())
+                cursor = cursor->left();
+            else
+                break;
+        }
+
+        // count the occurences
+        size_type counter = 0;
+        while(cursor != NULL && !(cursor->data() < target || target < cursor->data()))
+        {
+           ++counter;
+           cursor = cursor->left();
+        }
+        return counter;
+    }
+
+    template<class Item>
+    bag<Item>& bag<Item>::operator =(const bag<Item>& source)
+    {
+        // self-assignment protection
+        if(this != &source)
+        {
+            tree_clear(root_ptr);
+            root_ptr = tree_copy(source.root_ptr);
+        }
+        return *this;
+    }
+
+
+
+} // end of namespace
