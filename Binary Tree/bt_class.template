@@ -8,8 +8,7 @@
 // CLASS INVARIANT:
 //  1- binary_tree_node<Item>* root_ptr <--------- points to the root.
 //  2- binary_tree_node<Item>* current_ptr <------- used to traverse the binary tree
-//  3- binary_tree_node<Item>* parent_ptr <--------- points to the parent of current_ptr
-//  4- std::size_t count  <-------------------------- keeps track of the tree's size.
+//  3- std::size_t count  <-------------------------- keeps track of the tree's size.
 
 #include"binary_tree.h" // Provides the binary tree toolkit
 #include<cassert> // Provides assert()

@@ -138,11 +138,6 @@ namespace binary_tree_adnan
         bool has_child()const { return has_left_child() || has_right_child() ; }
         bool empty_tree()const { return size() == 0; }
 
-        // remove this
-        void print_tree()const
-        {
-            print(root_ptr, 0);
-        }
     private:
         binary_tree_node<Item>* root_ptr;
         binary_tree_node<Item>* current_ptr;
