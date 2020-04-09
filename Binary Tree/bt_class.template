@@ -1,0 +1,116 @@
+// This is the implementation file for the template class: binary_tree<Item>
+// See interface in: bt_class.h
+//
+// -------- Copyright © ---------
+//   @Author: Adnan Hashem Mohamed
+// -------------------------------
+//
+// CLASS INVARIANT:
+//  1- binary_tree_node<Item>* root_ptr <--------- points to the root.
+//  2- binary_tree_node<Item>* current_ptr <------- used to traverse the binary tree
+//  3- binary_tree_node<Item>* parent_ptr <--------- points to the parent of current_ptr
+//  4- std::size_t count  <-------------------------- keeps track of the tree's size.
+
+#include"binary_tree.h" // Provides the binary tree toolkit
+#include<cassert> // Provides assert()
+
+namespace binary_tree_adnan{
+
+	//template<class Item>
+	//void parent_ptr(binary_tree_node<Item>*& current_ptr, binary_tree_node<Item>*& child_ptr)
+	//{
+	//	bool done = false;
+	//	while(!current_ptr->is_leaf() && !done)
+	//	{
+	//		if((current_ptr->left() == child_ptr || current_ptr->right() == child_ptr))
+	//			done = true;
+	//		else
+	//		{
+	//			parent_ptr(current_ptr -> left(), child_ptr);
+	//			if((current_ptr->left() == child_ptr || current_ptr->right() == child_ptr))
+	//				break;
+	//			parent_ptr(current_ptr -> right(), child_ptr);
+	//		}
+	//		
+	//			
+	//	}
+	//}
+	
+	template<class Item>
+	binary_tree<Item>::binary_tree(const binary_tree<Item>& source)
+	{
+		count = source.count;
+		root_ptr = tree_copy(source.root_ptr);
+		current_ptr = root_ptr;
+	}
+
+	template<class Item>
+	void binary_tree<Item>::create_first_node(const Item& entry)
+	{
+		assert(size() == 0);
+		root_ptr = new binary_tree_node<Item>(entry);
+		current_ptr = root_ptr;
+		++count;
+	}
+
+	template<class Item>
+	void binary_tree<Item>::shift_to_root()
+	{
+		assert(size() > 0);
+		current_ptr = root_ptr;
+	}
+
+	//template<class Item>
+	//void binary_tree<Item>::shift_up()
+	//{
+	//	assert(has_parent());
+	//	auto parent = root_ptr;
+	//	parent_ptr(parent, current_ptr);
+	//	current_ptr = parent;
+	//}
+       
+	template<class Item>
+	void binary_tree<Item>::shift_left()
+	{
+		assert(has_left_child());
+		current_ptr = current_ptr->left();		
+	}
+    
+	template<class Item>
+	void binary_tree<Item>::shift_right()
+	{
+		assert(has_right_child());
+		current_ptr = current_ptr->right();	
+	}
+
+	template<class Item>
+	void binary_tree<Item>::add_left(const Item& entry)
+	{
+		assert(!has_left_child());
+		current_ptr->set_left(new binary_tree_node<Item>(entry));
+		++count;
+	}
+    
+	template<class Item>
+	void binary_tree<Item>::add_right(const Item& entry)
+	{
+		assert(!has_right_child());
+		current_ptr->set_right(new binary_tree_node<Item>(entry));
+		++count;
+	}
+
+	template<class Item>
+	void binary_tree<Item>::change(const Item& new_entry)
+	{
+		assert(size() > 0);
+		current_ptr->set_data(new_entry);
+	}
+
+	template<class Item>
+	Item binary_tree<Item>::retrieve() const
+	{
+		assert(size()>0);
+		return current_ptr->data();
+	}
+
+} // end of namespace
