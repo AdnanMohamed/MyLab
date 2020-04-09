@@ -4,7 +4,7 @@
 //
 //  --------Copyright ©-------- -
 //  @Authors: Main, and Walter Savitch (documentation + prototypes)
-//  @Co-Author: inline definitions
+//  @Co-Author: Adnan Hashem Mohamed (inline definitions)
 // ------------------------------ -
 //
 // TYPEDEFS for the bag<Item> class:
@@ -93,9 +93,12 @@ namespace binary_tree_adnan
             bag<Item>& left,
             bag<Item>& right
         );
-                // for debugging
-        void print_bag()const { print(root_ptr, 0); }
-        int depth()const { return tree_depth(root_ptr); }
+
+        void print_tree()const {
+            print(root_ptr, 0);
+            std::cout << "----------------\n";
+        }
+
     private:
         binary_tree_node<Item>* root_ptr; // Root pointer of binary search tree
         void insert_all(binary_tree_node<Item>* addroot_ptr);

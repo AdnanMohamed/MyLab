@@ -44,22 +44,21 @@ namespace binary_tree_adnan {
 	// binary search tree. The reference parameter, removed, has been set 
 	// to a copy of the removed item.
 	{
-        // Base-case: The root is the only node.
-        // Remove it and save it's value
-        if(root_ptr->is_leaf())
+        // There is no right child which means this 
+        // is the largest node. So, remove it and don't
+        // forget to make the left child the new root of this tree.
+        if(root_ptr->right() == NULL)
         {
             removed = root_ptr->data();
-            delete root_ptr;
-            root_ptr = NULL;
+            auto temp = root_ptr;
+            root_ptr = root_ptr->left();
+            delete temp;
         }
-        else if(root_ptr->right() != NULL)                      // Recursive step: solve the smaller version of the problem        
+        else                                                    // Recursive step: solve the smaller version of the problem        
         {                                                       // by going to the right if possible (because the max is in the right side)
-            bst_remove_max(root_ptr->right(), removed);         // If not possible go to the left.
+            bst_remove_max(root_ptr->right(), removed);         
         }
-        else
-        {
-            bst_remove_max(root_ptr->left(), removed);
-        }
+
 	}
 
     template <class Item>
@@ -96,6 +95,7 @@ namespace binary_tree_adnan {
                 // CASE: There is left sub-tree. Get the largest node in the left sub-tree
                 // and make it the be the node in place of the removed node.
 				bst_remove_max(root_ptr->left(), root_ptr->data());
+                return true;
 			}
 		}
 
@@ -174,7 +174,8 @@ namespace binary_tree_adnan {
     template<class Item>
     typename bag<Item>::size_type bag<Item>::count(const Item& target) const
     {
-        auto cursor = root_ptr; // variable for traversing the tree.
+        auto cursor = root_ptr; // variable for traversing the tree.]
+        size_type counter = 0;
 
         // find the node which has the same value as target
         while(cursor != NULL)
@@ -183,16 +184,10 @@ namespace binary_tree_adnan {
                 cursor = cursor->right();
             else if(target < cursor->data())
                 cursor = cursor->left();
-            else
-                break;
-        }
-
-        // count the occurences
-        size_type counter = 0;
-        while(cursor != NULL && !(cursor->data() < target || target < cursor->data()))
-        {
-           ++counter;
-           cursor = cursor->left();
+            else{
+                 ++counter;
+                 cursor = cursor->left();
+            }
         }
         return counter;
     }
