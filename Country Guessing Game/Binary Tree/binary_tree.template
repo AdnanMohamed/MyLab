@@ -1,0 +1,178 @@
+// This is the implementation file for the template class: binary_tree_node
+// 
+// -------- Copyright © ---------
+//   @Author: Adnan Hashem Mohamed
+// -------------------------------
+//
+// CLASS INVARIANT:
+//  1- Item data_field // holds the data stored in each node in the tree
+//	2- binary_tree_node* left_field // The pointer to the left child (NULL if no child exists)
+//  3- binary_tree_node* right_field // The pointer to the right child (NULL if no child exists)
+//
+
+#include<cstdlib>
+#include<iomanip>
+#include<iostream>
+
+namespace binary_tree_adnan{
+	template <class Process, class BTNode>
+	void inorder(Process f, BTNode* node_ptr)
+	{
+		// DO NOTHING for empty tree
+		if(node_ptr == NULL)
+			return;
+		// when reaching to leaf, apply the function
+		if(node_ptr->is_leaf())
+		 {
+			 f(node_ptr->data());
+		 }
+		else
+		{
+			// keep traversing the left branches
+			inorder(f, node_ptr->left());
+			
+			// apply the function to the node you were at
+			// when you went to the left child
+			f(node_ptr->data());
+			
+			// explore right branches.
+			inorder(f, node_ptr->right());
+		}
+	}
+
+	template <class Process, class BTNode>
+	void preorder(Process f, BTNode* node_ptr)
+	{
+		// DO NOTHING for empty tree
+		if(node_ptr == NULL)
+			return;
+		// when reaching to leaf, apply the function
+		if(node_ptr->is_leaf())
+		 {
+			 f(node_ptr->data());
+		 }
+		else
+		{
+			// before going to another node, apply the function first
+			f(node_ptr->data());
+			// keep traversing the left branches
+			preorder(f, node_ptr->left());
+			
+			// explore right branches.
+			preorder(f, node_ptr->right());
+		}
+	}
+
+	template <class Process, class BTNode>
+	void postorder(Process f, BTNode* node_ptr)
+	{
+		// DO NOTHING for empty tree
+		if(node_ptr == NULL)
+			return;
+		// when reaching to leaf, apply the function
+		if(node_ptr->is_leaf())
+		 {
+			 f(node_ptr->data());
+		 }
+		else
+		{
+
+			// keep traversing the left children
+			postorder(f, node_ptr->left());
+			
+			// explore right branches
+			postorder(f, node_ptr->right());
+
+			// before going to another node, apply the function first
+			f(node_ptr->data());
+		}	
+	}
+	
+	template <class Item, class SizeType>
+	void print(binary_tree_node<Item>* node_ptr, SizeType depth)
+	{
+		if(node_ptr == NULL)
+			return;
+		
+		if(node_ptr->is_leaf())
+		{
+			std::cout<<std::setw(4*depth);
+			std::cout<<node_ptr->data()<<std::endl;
+		}
+		else
+		{
+			// print the node which is right most or the one
+			// returning after traversing the left child.
+			print(node_ptr->right(), depth + 1);
+			std::cout<<std::setw(4*depth);
+			std::cout<<node_ptr->data()<<std::endl;
+			
+			// print the left child
+			print(node_ptr->left(), depth + 1);
+		}
+	}
+
+
+	template <class Item>
+	void tree_clear(binary_tree_node<Item>*& root_ptr)
+	{
+		// using the post-order traversing which
+		// allows us to delete the left child, then right child, then the parent.
+		
+		if(root_ptr != NULL)
+		{
+			// remove the leaf
+			if(root_ptr->is_leaf())
+			{ 
+				delete root_ptr;
+			}
+			else{
+				// remove the left sub-tree
+				tree_clear(root_ptr->left());
+				// go to the right child to remove it.
+				tree_clear(root_ptr->right());
+				// remove the parent of the nodes you just removed.
+				delete root_ptr;
+				root_ptr = NULL;
+			}
+		}
+	}
+
+	template <class Item>
+	binary_tree_node<Item>* tree_copy(const binary_tree_node<Item>* root_ptr)
+	{
+		// uses post-order traversal method [L-R-root]
+
+		if(root_ptr == NULL)
+			return NULL;
+		else
+		{
+			// copy the left branch of the current node
+			binary_tree_node<Item>* left_child(tree_copy(root_ptr->left()));
+			
+			// copy the right branch of the current node
+			binary_tree_node<Item>* right_child(tree_copy(root_ptr->right()));
+			
+			// create the new sub-root
+			return new binary_tree_node<Item> (root_ptr->data(), left_child, right_child);
+		}
+
+		
+	}
+
+	template <class Item>
+	std::size_t tree_size(const binary_tree_node<Item>* node_ptr)
+	{
+		// uses post-order traversal method [L-R-root]
+
+		if(node_ptr == NULL)
+			return 0;
+
+		if(node_ptr->is_leaf())
+			return 1;
+		else{
+			// total_size = left_branch_size + right_branch_size + the_root;
+			return tree_size(node_ptr->left()) + tree_size(node_ptr->right()) + 1;
+		}
+	}
+} // end of namespace
