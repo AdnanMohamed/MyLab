@@ -1,14 +1,30 @@
 1:Is the country in Asia?;
 1:Is it in the mideast?;
 1:Does the country have a sacred site which millions of people visit each year?;
+1:Is it the biggest country in Arab Gulf?;
 1:Saudi Arabia;
+0
+0
+1:Iraq;
 0
 0
 1:Is it an island?;
 1:Bahrain;
 0
 0
+1:Does the country's capital have the same name of the country?;
+1:Kuwait;
+0
+0
+1:Does this country have the ruins Of Babylon?;
+1:Iraq;
+0
+0
+1:Does it have Burj Khalifa?;
 1:UAE;
+0
+0
+1:Qatar;
 0
 0
 1:Does the country have pyramids?;
@@ -33,6 +49,14 @@
 0
 1:Is Eiffel Tower there?;
 1:France;
+0
+0
+1:Is It Famous for Windmills?;
+1:Holland;
+0
+0
+1:Is Cristiano Ronaldo from this country?;
+1:Portugal;
 0
 0
 1:Spain;
