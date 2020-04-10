@@ -61,7 +61,7 @@ namespace binary_tree_adnan{
 		 // apply for left branch
 		 postorder(f, node_ptr->left());
 			
-		 // apply for left branch
+		 // apply for right branch
 		 postorder(f, node_ptr->right());
 
 		 // apply to the root
