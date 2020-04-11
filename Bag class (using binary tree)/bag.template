@@ -247,8 +247,11 @@ namespace binary_tree_adnan {
       bag<Item>& right
     )
     {
-        assert(top.size() == 1);
-        top += left + right;
+       assert(top.size() == 1);
+       top.root_ptr->set_left (left.root_ptr);
+       left.root_ptr = NULL;
+       top.root_ptr->set_right (right.root_ptr);
+       right.root_ptr = NULL;
     }
 
 } // end of namespace
