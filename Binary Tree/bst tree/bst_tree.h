@@ -22,6 +22,9 @@
 //   bst( )
 //     Postcondition: The bst is empty.
 //
+//  binary_tree_adnan::binary_tree_node<Item>* get_root_ptr()const
+//    Postcondtion: returns the root_ptr which has the whole tree.
+//
 // MODIFICATION MEMBER FUNCTIONS for the bst<Item> class:
 //   size_type erase(const Item& target)
 //     Postcondition: All copies of target have been removed from the bst. The
@@ -39,12 +42,20 @@
 //   void operator +=(const bst& addend)
 //     Postcondition: Each item in addend has been added to this bst.
 //
+//  template <class Item>
+//  Item& bst<Item>::search(const Item& entry)
+//     Precondition: The entry is in the tree.
+//     Postcondition: returns a reference for of the entry element.
+//
 // CONSTANT MEMBER FUNCTIONS for the bst<Item> class:
 //   size_type size( ) const
 //     Postcondition: Return value is the total number of items in the bst.
 //
 //   size_type count(const Item& target) const
 //     Postcondition: Return value is number of times target is in the bst.
+//
+//   bool is_present(const Item& entry)const
+//     Postcondition: returns true if the entry is in the bst, else false.
 //
 // NONMEMBER FUNCTIONS for the bst class:
 //   bst operator +(const bst& b1, const bst& b2)
@@ -66,7 +77,6 @@
 //	 Precondition: root_ptr is the pointer to the root of a binary search tree.
 //	 Postcondition: a pointer to the head of a linked list is returned. The linked list
 //	 contains the elements of the bst such that the smallest entries are at the front of the list.
-
 //
 // VALUE SEMANTICS for the bst class:
 //   Assignments and the copy constructor may be used with bst objects.
@@ -103,7 +113,8 @@ namespace bst_adnan {
         // CONSTANT functions
         size_type size() const { return tree_size(root_ptr); }
         size_type count(const Item& target) const;
-
+        bool is_present(const Item& entry)const { return count(entry) != 0; }
+        binary_tree_adnan::binary_tree_node<Item>* get_root_ptr()const { return root_ptr; }
         // FRIENDS
 
         template <class Item>
@@ -127,6 +138,24 @@ namespace bst_adnan {
     // NONMEMBER functions for the bst<Item> template class
     template <class Item>
     bst<Item> operator +(const bst<Item>& b1, const bst<Item>& b2);
+
+    /*template<class Item>
+    bst<Item> balanced_btree(template_node_adnan::node<Item>* head_ptr)
+    {
+        
+        if (head_ptr == NULL)
+        {
+            return NULL;
+        }
+        else {
+            left.insert(head_ptr->data());
+            head_ptr = head_ptr->link();
+            top.insert(head_ptr->data());
+            head_ptr = head_ptr->link();
+            right.insert(head_ptr->data());
+            balanced_btree(head_ptr->link());
+        }
+    }*/
 
 } // end of namespace
 
