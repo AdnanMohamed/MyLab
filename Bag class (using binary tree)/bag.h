@@ -50,6 +50,17 @@
 //   bag operator +(const bag& b1, const bag& b2)
 //     Postcondition: The bag returned is the union of b1 and b2.
 //
+//  void join
+//  (
+//    bst<Item>& top,
+//    bst<Item>& left,
+//    bst<Item>& right
+//  )
+//   Precondition: top has just one item, elements of left is less than or equal to the item in top,
+//   and everything in right is greater than the item in top. 
+//   Postcondition: top now contains everything from left and right,
+//   and left and right are now both empty.
+//
 // VALUE SEMANTICS for the bag class:
 //   Assignments and the copy constructor may be used with bag objects.
 //

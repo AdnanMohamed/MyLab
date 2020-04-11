@@ -11,6 +11,7 @@
 //	the member variable root_ptr (which may be NULL for an empty tree).
 //
 #include"Binary Tree/binary_tree.h"
+#include<cassert>
 
 namespace binary_tree_adnan {
 
@@ -246,6 +247,7 @@ namespace binary_tree_adnan {
       bag<Item>& right
     )
     {
+        assert(top.size() == 1);
         top += left + right;
     }
 
