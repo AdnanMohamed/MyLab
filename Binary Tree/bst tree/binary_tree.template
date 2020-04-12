@@ -171,5 +171,51 @@ namespace binary_tree_adnan{
 		}
 	}
 
+	template<class Process, class Item, class T>
+	std::size_t counter(binary_tree_adnan::binary_tree_node<Item>* root_ptr,
+		Process f, T feature)
+	{
+		if (root_ptr == NULL)
+			return 0;
+		else if (f(root_ptr->data(), feature))
+			return 1 + counter(root_ptr->left(), f, feature) + counter(root_ptr->right(), f, feature);
+		else
+			return counter(root_ptr->left(), f, feature) + counter(root_ptr->right(), f, feature);
+	}
+
+	template<class Process, class Item, class T>
+	void get_items(binary_tree_adnan::binary_tree_node<Item>* root_ptr,
+		Process f, T feature, std::vector<Item>& v)
+	{
+		if (root_ptr != NULL)
+		{
+			if (f(root_ptr->data(), feature))
+			{
+				v.push_back(root_ptr->data());
+			}
+			get_items(root_ptr->left(), f, feature, v);
+			get_items(root_ptr->right(), f, feature, v);
+
+		}
+	}
+
+	template<class Item, class Process, class T >
+	void apply_feature(binary_tree_adnan::binary_tree_node<Item>* root_ptr,
+		Process f, T feature)
+	{
+		// DO NOTHING for empty tree
+		if (root_ptr == NULL)
+			return;
+
+		// apply for left branch
+		apply_feature(root_ptr->left(), f, feature);
+
+		// apply for right branch
+		apply_feature(root_ptr->right(), f, feature);
+
+		// apply to the root
+		f(root_ptr->data(), feature);
+	}
+
 
 } // end of namespace

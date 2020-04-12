@@ -75,6 +75,30 @@
 //   void preorder(Process f, BTNode* node_ptr)
 //      Same as the in-order function, except with a pre-order traversal.
 //
+//	 template<class Process, class Item, class T>
+//	 std::size_t counter(binary_tree_adnan::binary_tree_node<Item>* root_ptr,
+//  	Process f, T feature)
+//	 Precondition: root_ptr is the pointer to a binary tree. f is a predicate (boolean function)
+//	 which checks certain "feature" in each node. ( the function 'f' may take two arguments:
+//	 The Item stored in the tree and 'feature' to be tested if the node has that feature.)
+//	 Postcondition: The returned value is the number of nodes which f returned for them true.
+//
+//	template<class Process, class Item, class T>
+//	void get_items(binary_tree_adnan::binary_tree_node<Item>* root_ptr,
+//	Process f, T feature, std::vector<Item>& v)
+//	  Precondition: root_ptr is the pointer to the root of the binary tree. 'f' is a predicate function 
+//	  that may take a node of the binary tree and 'feature' as arguments and returns true indicating to add
+//	  the node to the vector. (This function is handy when you want to collect the nodes which meets certain requirement.)
+//	  Postcondition: v now contains all nodes which 'f' returned for them true when passed as arguments with 'feature'
+//
+//	template<class Item, class Process, class T >
+//	void apply_feature(binary_tree_adnan::binary_tree_node<Item>* root_ptr,
+//	Process f, T feature)
+//	  Precondition: root_ptr is the pointer to root of a binary tree. 'f' is a function that may
+//	  be used to take a node of type 'Item' and 'feature' as argument to apply 'feature' on the node.
+//	  Postcondition: All nodes have been passed to the function 'f' with feature. The implementation
+//	  of 'f' decides what happens to each node. (Perhaps, it applies 'feature' to the objects passed.)
+//
 //   template <class Item, class SizeType>
 //   void print(const binary_tree_node<Item>* node_ptr, SizeType depth)
 //     Precondition: node_ptr is a pointer to a node in a binary tree (or
@@ -121,6 +145,7 @@
 #define BINTREE_H
 #include <cstdlib>  // Provides NULL and size_t
 #include"Linked List/template_node.h"
+#include<vector>
 
 namespace binary_tree_adnan
 {
@@ -172,6 +197,18 @@ namespace binary_tree_adnan
 
 	template <class Process, class BTNode>
 	void postorder(Process f, BTNode* node_ptr);
+
+	template<class Process, class Item, class T>
+	std::size_t counter(binary_tree_adnan::binary_tree_node<Item>* root_ptr,
+		Process f, T feature);
+
+	template<class Process, class Item, class T>
+	void get_items(binary_tree_adnan::binary_tree_node<Item>* root_ptr,
+		Process f, T feature, std::vector<Item>& v);
+
+	template<class Item, class Process, class T >
+	void apply_feature(binary_tree_adnan::binary_tree_node<Item>* root_ptr,
+		Process f, T feature);
 
 	template <class Item, class SizeType>
 	void print(binary_tree_node<Item>* node_ptr, SizeType depth);
