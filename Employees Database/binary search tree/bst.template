@@ -1,0 +1,271 @@
+// This is the implementation file for the template class bst<Item>
+// See interface on bst.h
+//	------ - Copyright © -------- -
+//	@Author: Adnan Hashem Mohamd
+//	------------------------------ 
+//
+
+#include"binary_tree.h"
+
+namespace bst_adnan{
+
+	template<class Item>
+	void bst_linked_list(const binary_tree_adnan::binary_tree_node<Item>* root_ptr, template_node_adnan::node<Item>*& head_ptr)
+	{
+		if(root_ptr != NULL)
+		{
+			bst_linked_list(root_ptr->left(), head_ptr);
+			list_tail_attach(head_ptr, root_ptr->data());
+			bst_linked_list(root_ptr->right(), head_ptr);
+		}
+	}
+
+    template<class Item>
+    void bst<Item>::insert_all(binary_tree_adnan::binary_tree_node<Item>* addroot_ptr)
+    // Precondition: addroot_ptr is a pointer to the root of a binary tree
+    // (which could be NULL indicating an empty tree).
+    // Postcondition: every descendant of addroot_ptr ( and addroot_ptr) are
+    // elements of the binary search tree
+    {
+        // empty tree, do nothing
+        if(addroot_ptr != NULL)
+         {
+
+            // add the root
+            insert(addroot_ptr->data());
+            // add left_branch
+            insert_all(addroot_ptr->left());
+            // add right_branch
+            insert_all(addroot_ptr->right());
+         }
+
+    }
+
+    template <class Item>
+	void bst_remove_max(binary_tree_adnan::binary_tree_node<Item>*& root_ptr, Item& removed)
+	// Precondition: root_ptr is a root pointer of a non-empty binary 
+	// search tree.
+	// Postcondition: The largest item in the binary search tree has been
+	// removed, and root_ptr now points to the root of the new (smaller) 
+	// binary search tree. The reference parameter, removed, has been set 
+	// to a copy of the removed item.
+	{
+        // There is no right child which means this 
+        // is the largest node. So, remove it and don't
+        // forget to make the left child the new root of this tree.
+        if(root_ptr->right() == NULL)
+        {
+            removed = root_ptr->data();
+            auto temp = root_ptr;
+            root_ptr = root_ptr->left();
+            delete temp;
+        }
+        else                                                    // Recursive step: solve the smaller version of the problem        
+        {                                                       // by going to the right if possible (because the max is in the right side)
+            bst_remove_max(root_ptr->right(), removed);         
+        }
+
+	}
+
+    template <class Item>
+	bool bst_remove(binary_tree_adnan::binary_tree_node<Item>*& root_ptr, const Item& target)
+	// Precondition: root_ptr is a root pointer of a binary search tree 
+	// or may be NULL for an empty tree).
+	// Postcondition: If target was in the tree, then one copy of target
+	// has been removed, and root_ptr now points to the root of the new 
+	// (smaller) binary search tree. In this case the function returns true.
+	// If target was not in the tree, then the tree is unchanged (and the
+	// function returns false).
+	{
+        // CASE1: empty tree, target can't be there
+        if(root_ptr == NULL)
+            return false;
+
+		if (root_ptr->data() < target)
+			return bst_remove(root_ptr->right(), target);  // solving a similar version of the problem with 
+		else if (target < root_ptr->data())                // the root changing to be either the right child or the left
+			return bst_remove(root_ptr->left(), target);   // depending on the target.
+		else
+		{
+            // CASE: no left child
+            // remove that node and set the root to be the "old" right child.
+			if (root_ptr->left() == NULL)
+			{
+				auto new_root = root_ptr->right();
+                delete root_ptr;
+				root_ptr = new_root;
+                return true;
+			}
+			else
+			{
+                // CASE: There is left sub-tree. Get the largest node in the left sub-tree
+                // and make it the be the node in place of the removed node.
+				bst_remove_max(root_ptr->left(), root_ptr->data());
+                return true;
+			}
+		}
+
+	}
+
+    template <class Item>
+	typename bst<Item>::size_type bst_remove_all
+	(binary_tree_adnan::binary_tree_node<Item>*& root_ptr, const Item& target)
+	// Precondition: root_ptr is a root pointer of a binary search tree 
+	// or may be NULL for an empty tree).
+	// Postcondition: All copies of target have been removed from the tree
+	// has been removed, and root_ptr now points to the root of the new 
+	// (smaller) binary search tree. The return value tells how many copies
+	// of the target were removed.
+	{
+        typename bst<Item>::size_type counter = 0;
+		while (bst_remove(root_ptr, target)){counter++;}
+        return counter;
+	}
+	
+    template<class Item>
+    bst<Item>::bst()
+    {
+        root_ptr = NULL;
+    }
+
+    template<class Item>
+    bst<Item>::bst(const bst& source)
+    {
+        root_ptr = NULL;
+        root_ptr = tree_copy(source.root_ptr);
+    }
+
+    template<class Item>
+    bst<Item>::~bst(){tree_clear(root_ptr);}
+
+    template<class Item>
+    void bst<Item>::insert(const Item& entry)
+    {
+        // CASE: If it's an empty tree, then entry will be the value of the root
+        if(root_ptr == NULL)
+         {
+           root_ptr = new binary_tree_adnan::binary_tree_node<Item>(entry);
+           return;
+         }
+        
+        auto cursor = root_ptr; // this variable to traverse the tree.
+        
+        // traverse the tree, and insert the new node such that:
+        //  - for any node n, the right sub-tree of n contains the nodes which are
+        //    greater than n and the left sub-tree contains an entry with less value or equal to n.
+        while(true)
+        {
+            if(cursor->data() < entry)
+            {
+              if(cursor->right() == NULL)
+                {
+                    cursor->set_right(new binary_tree_adnan::binary_tree_node<Item>(entry));
+                    break;
+                }
+              else
+                cursor = cursor->right();  
+            }
+            else{
+               if(cursor->left() == NULL)
+               {
+                  cursor->set_left(new binary_tree_adnan::binary_tree_node<Item>(entry));  
+                  break;
+               }
+               else
+                  cursor = cursor->left(); 
+            }
+        }
+    }
+
+    template<class Item>
+    typename bst<Item>::size_type bst<Item>::count(const Item& target) const
+    {
+        auto cursor = root_ptr; // variable for traversing the tree.]
+        size_type counter = 0;
+
+        // find the node which has the same value as target
+        while(cursor != NULL)
+        {
+            if(cursor->data() < target)
+                cursor = cursor->right();
+            else if(target < cursor->data())
+                cursor = cursor->left();
+            else{
+                 ++counter;
+                 cursor = cursor->left();
+            }
+        }
+        return counter;
+    }
+
+    template<class Item>
+    bst<Item>& bst<Item>::operator =(const bst<Item>& source)
+    {
+        // self-assignment protection
+        if(this != &source)
+        {
+            tree_clear(root_ptr);
+            root_ptr = tree_copy(source.root_ptr);
+        }
+        return *this;
+    }
+
+    template<class Item>
+    bool bst<Item>::erase_one(const Item& target)
+    {
+        return bst_remove(root_ptr, target);
+    }
+
+    template<class Item>
+    typename bst<Item>::size_type bst<Item>::erase(const Item& target)
+    {
+        return bst_remove_all(root_ptr, target);
+    }
+
+    template<class Item>
+    void bst<Item>::operator +=(const bst<Item>& addend)
+    {
+        // Avoid infinite loop created from self-addition
+        if(this == &addend)
+        {
+            auto new_root = tree_copy(addend.root_ptr);
+            insert_all(new_root);
+            tree_clear(new_root);
+        }
+        else
+            insert_all(addend.root_ptr);
+    }
+
+    template <class Item>
+    bst<Item> operator +(const bst<Item>& b1, const bst<Item>& b2)
+    {
+        auto b3(b1);
+        b3+=b2;
+        return b3;
+    }
+
+    template <class Item>
+    void join
+    (
+      bst<Item>& top,
+      bst<Item>& left,
+      bst<Item>& right
+    )
+    {
+       assert(top.size() == 1);
+       top.root_ptr->set_left (left.root_ptr);
+       left.root_ptr = NULL;
+       top.root_ptr->set_right (right.root_ptr);
+       right.root_ptr = NULL;
+    }
+
+    template<class Item>
+    template_node_adnan::node<Item>* to_linked_list(bst<Item> bs_tree)
+	{
+		template_node_adnan::node<Item>* head_ptr = NULL;
+        bst_linked_list(bs_tree.root_ptr, head_ptr);
+        return head_ptr;
+	}
+
+
+} // end of namespace
