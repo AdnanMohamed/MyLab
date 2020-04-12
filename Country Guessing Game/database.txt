@@ -24,6 +24,10 @@
 1:UAE;
 0
 0
+1:Is it one of the first countries trading coffee?;
+1:Yemen;
+0
+0
 1:Qatar;
 0
 0

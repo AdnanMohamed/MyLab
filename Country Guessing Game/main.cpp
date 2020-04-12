@@ -30,7 +30,14 @@ int main(int argc, const char*argv[]) {
 	binary_tree_node<string>* root_ptr = NULL;
 	
 	// open the input file.
-	std::ifstream in(argv[1]);
+	std::ifstream in;
+	if (argc != 1)
+	{
+		in.open(argv[1]);
+	}
+	else {
+		in.open("database.txt");
+	}
 	if (in.fail())
 	{
 		std::cerr << "FAILED opening the input file: " << argv[1] << endl;
@@ -47,7 +54,15 @@ int main(int argc, const char*argv[]) {
 	cout << "Thanks for playing ! :)\n";
 
 	// send the tree to the database
-	std::ofstream out(argv[1]);
+	std::ofstream out;
+	if (argc != 1)
+	{
+		in.open(argv[1]);
+	}
+	else {
+		in.open("database.txt");
+	}
+
 	if (out.fail())
 	{
 		std::cerr << "FAILED opening the output file : " << argv[1] << endl;
@@ -93,7 +108,7 @@ void tree_to_file(std::ostream& out, binary_tree_node<std::string>*& root_ptr)
 void validate_commands(int argc, int right, const char usage[])
 {
 	try {
-		if (argc != right)
+		if (argc != right && argc != 1)
 			throw argc;
 	}
 	catch (int e)
