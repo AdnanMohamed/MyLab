@@ -100,6 +100,8 @@ namespace p_queue_adnan{
         {
            used = source.used;
            current_size = source.current_size;
+           delete [] data;
+           delete[] order;
            data = new Item[current_size];
            order = new size_type[current_size];
 
@@ -120,7 +122,9 @@ namespace p_queue_adnan{
 
         std::size_t i = 0;
         // swap the root with the last child
+        // and keep track of the order.
         swap(data[0], data[used-1]);
+        swap(order[0], order[used-1]);
 
         // shift the root down until it reach a point it can't go further.
         while (!((data[2 * i + 2] < data[i]) && (data[2 * i + 1] < data[i]))
