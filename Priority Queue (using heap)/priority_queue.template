@@ -1,0 +1,170 @@
+// This is the implementation file for the template class: priority_queue<Item>
+//
+/*
+-------- Copyright © ---------
+  @Author: Adnan Hashem Mohamed
+
+-------------------------------
+*/
+// CLASS INVARIANT:
+// 1- static const int START_SIZE = 5 --> This is the starting size for data, and order arrays
+// 2- Item* data;   --------------------> an array that which represents the heap structure of the elements.
+// 3- size_type* order -----------------> maintains the order in which the entries were entered.
+// 4- size_type used -------------------> holds account of the number of elements currently in data[]
+// 5- size_type current_size -----------> The current size of the arrays data and order.
+
+#include<algorithm> // provides std::copy()
+
+namespace p_queue_adnan{
+
+    template<class Item>
+    void priority_queue<Item>::double_size()
+    // Postcondition: current_size now is doubled. data[] has the elements it
+    // was holding and its size is doubled, aswell as order.
+    {
+        current_size *= 2;
+        Item* new_data = new Item[current_size];
+        std::copy(data, data + used, new_data);
+        delete []data;
+        data = new Item[current_size];
+        std::copy(new_data, new_data + used, data);
+        delete[]new_data;
+
+        size_type* new_order = new size_type[current_size];
+        std::copy(order, order + used, new_order);
+        delete[]order;
+        order = new size_type[current_size];
+        std::copy(new_order, new_order + used, order);
+        delete[]new_order;
+    }
+
+   template<class Item>
+   void swap(Item& e1, Item& e2)
+   {
+     Item temp = e1;
+     e1 = e2;
+     e2 = temp;
+   }
+    
+    template<class Item>
+    priority_queue<Item>::priority_queue()
+    {
+        data = new Item[START_SIZE];
+        order = new size_type[START_SIZE];
+        used = 0;
+        current_size = START_SIZE;
+    }
+
+    template<class Item>
+    priority_queue<Item>::priority_queue(const priority_queue<Item>& source)
+    {
+        used = source.used;
+        current_size = source.current_size;
+        data = new Item[current_size];
+        order = new size_type[current_size];
+
+        std::copy(source.data, source.data + current_size, data);
+        std::copy(source.order, source.order + current_size, order);
+
+    }
+
+    template<class Item>
+    void priority_queue<Item>::push(const Item& entry)
+    {
+        // First check the array's capacity. If there is no space, add space.
+        if (used == current_size)
+        {
+            double_size();
+        }
+        
+        // add the entry to be the last left-most child in the heap.
+        data[used] = entry;
+        order[used] = used + 1;
+
+        // shift the entry up to the correct place
+        auto i = used;
+        while (i > 0 && data[(i - 1) / 2] < entry)
+        {
+            swap(data[i], data[(i - 1) / 2]); // swap child with its parent.
+            swap(order[i], order[(i - 1) / 2]); // keep track of the order of element's entries.
+            i = (i - 1) / 2;
+        }
+        ++used;
+    }
+
+    template<class Item>
+    priority_queue<Item>& priority_queue<Item>::operator=(const priority_queue<Item>& source)
+    {
+        // self assignment protection
+        if(this != &source)
+        {
+           used = source.used;
+           current_size = source.current_size;
+           data = new Item[current_size];
+           order = new size_type[current_size];
+
+          std::copy(source.data, source.data + current_size, data);
+          std::copy(source.order, source.order + current_size, order);
+        }
+
+        return *this;
+    }
+
+    template<class Item>
+    Item priority_queue<Item>::pop()
+    {
+        assert(!empty());
+
+        // remove the highest priority element which should be in index 0.
+        // Break the tie between elements using order[].
+
+        std::size_t i = 0;
+        // swap the root with the last child
+        swap(data[0], data[used-1]);
+
+        // shift the root down until it reach a point it can't go further.
+        while (!((data[2 * i + 2] < data[i]) && (data[2 * i + 1] < data[i]))
+            && (2*i +2 < used - 1))
+        {
+
+            // swap with greatest child
+            if ((data[2 * i + 1] < data[2 * i + 2]))  // the left child is greater
+            {
+                swap(data[i], data[2 * i + 2]);
+                swap(order[i], order[2 * i + 2]);
+                i = 2 * i + 2;
+            }
+            else if(data[2 * i + 2] < data[2 * i + 1]) // the right child is greater
+            {
+                swap(data[i], data[2 * i + 1]);
+                swap(order[i], order[2 * i + 1]);
+                i = 2 * i + 1;
+            }
+            else // they are equal
+            {
+                if (order[2 * i + 1] < order[2 * i + 2]) // break the tie by checking which entered first
+                {
+                    swap(data[i], data[2 * i + 1]);
+                    swap(order[i], order[2 * i + 1]);
+                    i = 2 * i + 1;
+                }
+                else {
+                    swap(data[i], data[2 * i + 2]);
+                    swap(order[i], order[2 * i + 2]);
+                    i = 2 * i + 2;
+                }
+            }
+        }
+        auto top_item = data[used-1];
+        --used;
+        return top_item;
+    }
+
+    template<class Item>
+    Item priority_queue<Item>::top() const
+    {
+        assert(!empty());
+        return data[0];
+    }
+
+} // end of namespace
