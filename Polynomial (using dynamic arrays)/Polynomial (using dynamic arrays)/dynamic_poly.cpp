@@ -284,11 +284,13 @@ namespace dynamic_poly_adnan {
 
 	unsigned int polynomial::previous_term(unsigned int e) const
 	{
-		if (e <= degree() + 1)
+		if (e == 0)
 		{
-			if (coef[e - 1] != 0)
+			while (e > 0)
 			{
-				return e - 1;
+				if (coefficient(e - 1) != 0)
+					return e - 1;
+				--e;
 			}
 		}
 		return UINT_MAX;
