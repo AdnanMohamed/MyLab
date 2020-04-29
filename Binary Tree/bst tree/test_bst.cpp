@@ -2,6 +2,7 @@
 #include<cassert>
 #include<fstream>
 #include"bst_tree.h"
+#include"../bt_class.h"
 #include"Linked List/template_node.h"
 
 using namespace bst_adnan;
@@ -31,25 +32,9 @@ int main() {
 
 	//srand(time(nullptr));
 
-	bst<int>bs_tree, bs_tree2, top;
-	top.insert(10);
-	complete_btree_l(bs_tree);
-	complete_btree_r(bs_tree2);
-	join(top, bs_tree, bs_tree2);
 	
-	top.print_tree();
-	cout << "------------\n";
-	auto head_ptr = to_linked_list(top);
-	auto x = head_ptr;
-	while (x != NULL)
-	{
-		cout << x->data() << " ";
-		x = x->link();
-	}
-	cout << "\n--------\n";
-	assert(top.is_present(28));
 
-	cout << "------------\n";
+	//cout<<ceil(list_length(head_ptr) / 2);
 }
 
 

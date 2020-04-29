@@ -44,6 +44,20 @@ namespace binary_tree_adnan{
 	}
 
 	template<class Item>
+	binary_tree<Item>& bianry_tree<Item>::operator=(const binary_tree<Item>& source)
+	{
+		if(this != &source)
+		{
+			count = source.count;
+			tree_clear(root_ptr);
+			root_ptr = tree_copy(source.root_ptr);
+			current_ptr = root_ptr;
+		}
+
+		return *this;
+	}
+
+	template<class Item>
 	void binary_tree<Item>::create_first_node(const Item& entry)
 	{
 		assert(size() == 0);

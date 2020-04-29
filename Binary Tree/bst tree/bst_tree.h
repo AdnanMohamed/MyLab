@@ -86,6 +86,7 @@
 #define BST_H
 #include"binary_tree.h"
 #include"Linked List/template_node.h"
+#include<cmath>
 
 namespace bst_adnan {
     template <class Item>
@@ -135,6 +136,44 @@ namespace bst_adnan {
     // NONMEMBER functions for the bst<Item> template class
     template <class Item>
     bst<Item> operator +(const bst<Item>& b1, const bst<Item>& b2);
+
+    template<class Item>
+    bst<Item> linked_list_to_bst(template_node_adnan::node<Item>* head_ptr, double n)
+    {
+        if (n == 1)
+        {
+            bst<Item> temp;
+            temp.insert(head_ptr->data());
+            return  temp;
+        }
+        else if (n == 2)
+        {
+            bst<Item>temp;
+            temp.insert(head_ptr->link()->data());
+            temp.insert(head_ptr->data());
+            return temp;
+        }
+        else if (n == 3)
+        {
+            bst<Item>temp;
+            temp.insert(head_ptr->link()->data());
+            temp.insert(head_ptr->data());
+            return temp;
+        }
+        else
+        {
+            bst<Item> top;
+            top.insert(template_node_adnan::list_locate(head_ptr, ceil(n / 2))->data());
+            bst<Item> left = linked_list_to_bst(head_ptr, ceil((n - 1)/ 2));
+            bst<Item> right = linked_list_to_bst(template_node_adnan::list_locate(head_ptr, n + 1), floor(n / 2));            
+
+            join(top, left, right);
+            return top;
+        }
+        ////top.insert(list_locate(head_ptr, n)->data());
+        //
+        //return top;
+    }
 
 } // end of namespace
 

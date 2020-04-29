@@ -138,6 +138,9 @@ namespace binary_tree_adnan
         bool has_child()const { return has_left_child() || has_right_child() ; }
         bool empty_tree()const { return size() == 0; }
 
+        // ASSIGNMENT OPTOR
+        binary_tree& operator=(const binary_tree& source);
+
     private:
         binary_tree_node<Item>* root_ptr;
         binary_tree_node<Item>* current_ptr;
