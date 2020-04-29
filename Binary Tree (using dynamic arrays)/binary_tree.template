@@ -1,0 +1,204 @@
+// This is the implementation file for the template class binary_tree<Item>
+// See interface on binary_tree.h
+// The tree is implemented using dynamic array to hold the values of the nodes.
+//
+//	------ - Copyright © -------- -
+//	@Author: Adnan Hashem Mohamed
+//	------------------------------ 
+//
+// CLASS INVARIANT:
+//  1- Item* nodes  ---------------> array containing the nodes of the tree.
+//  2- bool* is_present -----------> array that indicates the presence of a node. (1 is present, 0 is not present)
+//  3- std::size_t current_index -----> the index of the current node in the tree.
+//  4- std::size_t count ------------> counts how many nodes in the tree.
+
+#include<cassert>
+#include<algorithm> // provides std::copy
+
+namespace binary_tree2_adnan
+{
+
+	template<class Item>
+	binary_tree<Item>::binary_tree(const binary_tree<Item>& source)
+	{
+		capacity = source.capacity;
+		count = source.count;
+		current_index = 0;
+		nodes = new Item[capacity];
+		is_present = new bool[capacity];
+		std::copy(source.nodes, source.nodes + capacity, nodes);
+		std::copy(source.is_present, source.is_present + capacity, is_present);
+	}
+
+	template<class Item>
+	binary_tree<Item>& binary_tree<Item>::operator=(const binary_tree<Item>& source)
+	{
+		// self assignment protection
+		if(this != &source)
+		{
+			capacity = source.capacity;
+			count = source.count;
+			current_index = 0;
+
+			delete [] nodes;
+			delete [] is_present;
+
+			nodes = new Item[capacity];
+			is_present = new bool[capacity];
+			
+			std::copy(source.nodes, source.nodes + capacity, nodes);
+			std::copy(source.is_present, source.is_present + capacity, is_present);
+		}
+
+		return *this;
+	}
+
+	template<class Item>
+	void binary_tree<Item>::create_first_node(const Item& entry)
+	{
+		assert(empty_tree());
+		count = capacity = 1;
+		nodes = new Item[1]{entry};
+		is_present = new bool[1]{true};
+		current_index = 0;
+	}
+
+	template<class Item>
+	bool binary_tree<Item>::has_left_child() const
+	{
+		return (2*current_index + 1) < capacity &&
+				is_present[2*current_index + 1];
+	}
+
+	template<class Item>
+    bool binary_tree<Item>::has_right_child() const
+	{
+		return (2*current_index + 2) < capacity &&
+			is_present[2*current_index + 2];
+	}
+
+	template<class Item>
+    bool binary_tree<Item>::has_parent() const
+	{
+		// only the root does not have a parent, poor root :(
+		return (!empty_tree() && current_index != 0);
+	}
+
+	template<class Item>
+	Item binary_tree<Item>::retrieve() const
+	{
+		assert(!empty_tree());
+		return nodes[current_index];
+	}
+
+	template<class Item>
+	void binary_tree<Item>::add_left(const Item& entry)
+	{
+		assert(!has_left_child());
+		
+		// CASE: There is no space for the child
+		if((2*current_index + 1) >= capacity)
+		{
+			// create new array with valid space for the child, and
+			// a new array for presence check.
+			auto new_capacity =  2 * (2*current_index + 2);// this make sure we don't need every time to expand the arrays
+			Item* new_nodes = new Item[new_capacity];
+			bool* new_is_present = new bool[new_capacity]{0};
+
+			// copy the elements of the old arrays to the new
+			std::copy(nodes, nodes + capacity, new_nodes);
+			std::copy(is_present, is_present + capacity, new_is_present);
+
+			// free the old arrays.
+			delete [] nodes;
+			delete [] is_present;
+
+			// update the private member arrays.
+			nodes = new_nodes;
+			is_present = new_is_present;
+			capacity = new_capacity;
+		}
+
+		nodes[2*current_index + 1] = entry; // adding the left child to the tree.
+		is_present[2*current_index + 1] = 1;  // marking that the left child of the current node is present.
+		count++; // increment the counter
+	}
+    
+	template<class Item>
+	void binary_tree<Item>::add_right(const Item& entry)
+	{
+		assert(!has_right_child());
+		
+		// CASE: There is no space for the child
+		if((2*current_index + 2) >= capacity)
+		{
+			// create new array with valid space for the child, and
+			// a new array for presence check.
+			auto new_capacity = 2 * (2*current_index + 3);    // this make sure we don't need every time to expand the arrays
+			Item* new_nodes = new Item[new_capacity];
+			bool* new_is_present = new bool[new_capacity]{0};
+
+			// copy the elements of the old arrays to the new
+			std::copy(nodes, nodes + capacity, new_nodes);
+			std::copy(is_present, is_present + capacity, new_is_present);
+
+			// free the old arrays.
+			delete [] nodes;
+			delete [] is_present;
+
+			// update the private member arrays.
+			nodes = new_nodes;
+			is_present = new_is_present;
+			capacity = new_capacity;
+		}
+
+		nodes[2*current_index + 2] = entry; // adding the left child to the tree.
+		is_present[2*current_index + 2] = 1;  // marking that the left child of the current node is present.
+		count++; // increment the counter
+	}
+
+	template<class Item>
+	void binary_tree<Item>::shift_left()
+	{
+		assert(has_left_child());
+		current_index = 2*current_index + 1;
+	}
+
+	template<class Item>
+	void binary_tree<Item>::shift_right()
+	{
+		assert(has_right_child());
+		current_index = 2*current_index + 2;
+	}
+
+	template<class Item>
+	void binary_tree<Item>::shift_up()
+	{
+		assert(has_parent());
+		current_index = (current_index - 1) / 2;
+	}
+
+	template<class Item>
+	void binary_tree<Item>::shift_to_root()
+	{
+		assert(!empty_tree());
+		current_index = 0;
+	}
+
+	template<class Item>
+	void binary_tree<Item>::change(const Item& new_entry)
+	{
+		assert(!empty_tree());
+		nodes[current_index] = new_entry;
+	}
+
+	template<class Item>
+	void binary_tree<Item>::clear_tree()
+	{
+		delete[] nodes;
+		delete[] is_present;
+		current_index = 0;
+		count = 0;
+	}
+
+}  // end of namespace
