@@ -92,7 +92,7 @@ namespace set_adnan
 
     private:
         // MEMBER CONSTANTS
-        static const std::size_t MINIMUM = 2;
+        static const std::size_t MINIMUM = 3;
         static const std::size_t MAXIMUM = 2 * MINIMUM;
         // MEMBER VARIABLES
         std::size_t data_count;
