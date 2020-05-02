@@ -50,8 +50,8 @@
 #ifndef MAIN_SAVITCH_SET_H
 #define MAIN_SAVITCH_SET_H
 #include <cstdlib>   // Provides size_t
-#include<algorithm>
-#include<iomanip>
+#include<algorithm>  // Provides copy
+#include<iomanip>  // Provides setw
 #include<iostream>
 
 namespace set_adnan
@@ -92,7 +92,7 @@ namespace set_adnan
 
     private:
         // MEMBER CONSTANTS
-        static const std::size_t MINIMUM = 2; // change it to 2 after debugging.
+        static const std::size_t MINIMUM = 5;
         static const std::size_t MAXIMUM = 2 * MINIMUM;
         // MEMBER VARIABLES
         std::size_t data_count;
@@ -109,246 +109,21 @@ namespace set_adnan
 
         // MORE HELPER FUNCTIONS FOR THE HELPING FUNCTIONS :)
         void transfer_element(std::size_t i, bool right);
+        void transfer_child(std::size_t i, bool right);
 
-        void transfer_child(size_t i, bool right)
-            // Postcondition: if right is true, the child of subset[i+1] is given to subset[i]
-            // else, the child of subset[i-1] is given to subset[i]
-        {
-            if (!right)
-            {
-                // take the last child of subset[i-1] and give it to subset[i]
-                if (subset[i - 1]->child_count != 0)
-                {
-                    shift_right3(subset[i]->subset, MAXIMUM + 2, 0);
-                    subset[i]->subset[0] = subset[i - 1]->subset[subset[i - 1]->child_count - 1];
-                    subset[i]->child_count++;
-                    shift_left3(subset[i - 1]->subset, subset[i - 1]->child_count, subset[i - 1]->child_count - 1);
-                }
-            }
-            else
-            {
-                // take the last child of subset[i+1] and give it to subset[i]
-                if (subset[i + 1]->child_count != 0)
-                {
-                    
-                    subset[i]->subset[MINIMUM] = subset[i + 1]->subset[0];
-                    subset[i]->child_count++;
-                    shift_left3(subset[i + 1]->subset, subset[i + 1]->child_count, 0);
-                }
-            }
-        }
+        std::size_t get_index(const Item& target);
+        bool found(std::size_t i, const Item& target);
 
-        size_t get_index(const Item& target)
-            // Postcondition: the index returned suffices the following:
-            // target <= data[i]
-        {
-            size_t i = 0;
-            while ( i < data_count && data[i] < target)
-                ++i;
-            return i;
-        }
-        bool found(size_t i, const Item& target)
-            // Postcondition: returns true if target is in the root.
-            // else false.
-        {
-            if (i < data_count && !(target < data[i]))
-                return true;
-            else
-                return false;
-        }
+        void shift_right_data(size_t index);
+        void shift_right_subsets(size_t index);
 
-        void shift_right2(Item a[], size_t size, size_t index);
-        void shift_right3(set<Item>* a[], size_t size, size_t index)
-        {
-            for (auto i = size - 1; i > index; --i)
-                a[i] = a[i - 1];
-        }
+        void shift_left_data(size_t index = -1);
+        void shift_left_subsets(size_t index = -1);
 
-        void shift_left2(Item a[], size_t& size, size_t index);
-        void shift_left3(set<Item>* a[], size_t& size, size_t index)
-        {
-            for (auto i = index; i < size + 1; ++i)
-                a[i] = a[i + 1];
-            --size;
-        }
-
-        void combine(size_t i, bool right)
-            // Precondition: subset[i] elements are less than MIN.
-            // Postcondition: if right == true, then subset[i] is combined to subset[i+1]
-            // else subset[i] is combined to subset[i-1]
-        {
-            if (right)
-            {
-                //shift_right2(subset[i + 1]->data, MINIMUM, 0);
-                //subset[i + 1]->data[0] = data[i];
-                //shift_left2(data, data_count, i);
-                subset[i]->data[MINIMUM-1] = data[i];
-                shift_left2(data, data_count, i);
-                Item* temp_data = new Item[MAXIMUM];
-                std::copy(subset[i]->data, subset[i]->data + MINIMUM, temp_data);
-                std::copy(subset[i + 1]->data, subset[i+1]->data + MINIMUM, temp_data + MINIMUM);
-                std::copy(temp_data, temp_data + MAXIMUM, subset[i + 1]->data);
-                delete []temp_data;
-                subset[i + 1]->data_count = MAXIMUM;
-
-                if (subset[i]->child_count > 0)
-                {
-                    set<Item>** temp_subset = new set<Item> * [MAXIMUM + 2];
-                    std::copy(subset[i]->subset, subset[i]->subset + subset[i]->child_count, temp_subset);
-                    std::copy(subset[i + 1]->subset, subset[i + 1]->subset + subset[i + 1]->child_count, temp_subset + MINIMUM);
-                    std::copy(temp_subset, temp_subset + MAXIMUM + 2, subset[i + 1]->subset);
-                    delete temp_subset;
-                    subset[i + 1]->child_count += subset[i]->child_count;
-                }
-
-            }
-            else
-            {
-                //subset[i]->data[MINIMUM] = data[i];
-                //shift_left2(data, data_count, i);
-                shift_right2(subset[i]->data, MINIMUM, 0);
-                subset[i]->data[0] = data[i-1];
-                shift_left2(data, data_count, i-1);
-                std::copy(subset[i]->data, subset[i]->data + MINIMUM, subset[i - 1]->data + subset[i - 1]->data_count);
-                std::copy(subset[i]->subset, subset[i]->subset + subset[i]->child_count, subset[i - 1]->subset + subset[i - 1]->child_count);
-                subset[i - 1]->data_count = MAXIMUM;               
-                subset[i - 1]->child_count += subset[i]->child_count;
-            }
-
-            // deleting the previous pointer
-            shift_left3(subset, child_count, i);
-
-        }
+        void combine(std::size_t i, bool right);
 
     };
 
-    template<class Item>
-    void set<Item>::shift_right2(Item a[], size_t size, size_t index)
-        // Precondition: size is the size of the array, index is a valid index
-        // Postcondition: all elements from index and after it are shifted one spot
-        // to the right to make index a valid place to insert an element in.
-    {
-        for (auto i = size - 1; i > index; --i)
-            a[i] = a[i - 1];
-    }
-
-    template<class Item>
-    void set<Item>::transfer_element(std::size_t i, bool right)
-        // Precondition: subset[i] has elements less than MIN.
-// Postcondition: if 'right' is true, then ith element of the root is transfered to
-// the 0th element of subset[i] and subset[i-1] last element is 
-// given to the root in place of the taken element.
-// The last child of subset[i-1] is now belongs to subset[i] children.
-    {
-        if (right)
-        {
-            subset[i]->data[subset[i]->data_count] = data[i];
-            subset[i]->data_count++;
-            data[i] = subset[i+1]->data[0];
-            shift_left2(subset[i+1]->data, subset[i+1]->data_count, 0);
-        }
-        else
-        {
-            // making the 0th index available in the data of subset[i]
-            shift_right2(subset[i]->data, MAXIMUM, 0);
-            subset[i]->data[0] = data[i - 1];
-            data[i - 1] = subset[i - 1]->data[subset[i - 1]->data_count - 1];
-            subset[i]->data_count++;
-            shift_left2(subset[i-1]->data, subset[i-1]->data_count, subset[i-1]->data[subset[i-1]->data_count - 1]);
-        }
-    }
-
-    template<class Item>
-    void set<Item>::shift_left2(Item a[], size_t& size, size_t index)
-    {
-        for (auto i = index; i < size + 1; ++i)
-            a[i] = a[i + 1];
-        --size;
-    }
-
-    template<class Item>
-    void set<Item>::remove_biggest(Item& removed_entry)
-    {
-        if (child_count == 0)
-        {
-            removed_entry = data[data_count - 1];
-            shift_left2(data, data_count, data_count - 1);
-        }
-        // removing the biggest element in the subset
-        else
-            subset[child_count - 1]->remove_biggest(removed_entry);
-
-        if (child_count > 0 && subset[child_count - 1]->data_count < MINIMUM)
-            fix_shortage(child_count - 1);
-    }
-
-    template<class Item>
-    bool set<Item>::loose_erase(const Item& target)
-    {
-        auto i = get_index(target);
-        if (!found(i, target) && child_count == 0)  // target not in root and root has no child.
-            return false;
-        else if (found(i, target) && child_count == 0) // target is found and the root has no children
-        {
-            // removing the element
-            shift_left2(data, data_count, i);
-            return true;
-        }
-        else if (child_count != 0 && !found(i, target)) // target is not in the root but maybe in its children
-        {
-            bool is_erased = subset[i]->loose_erase(target); // this may cause the root to have shortage in elements
-            if (subset[i]->data_count < MINIMUM)  // to check if shortage happend.
-                fix_shortage(i);
-            return is_erased;
-        }
-        else if(child_count != 0 && found(i, target))  // target in root and root has no children
-        {
-            subset[i]->remove_biggest(data[i]);
-            if (subset[i]->data_count < MINIMUM)
-                fix_shortage(i);
-            return true;
-        }
-    }
-
-    template<class Item>
-    void set<Item>::fix_shortage(std::size_t i)
-    {
-        if (i > 0 && subset[i - 1]->data_count > MINIMUM)
-        {
-            transfer_element(i, false);  // handles the transfer from root to subset[i] and from subset[i-1] to root.
-            transfer_child(i, false);
-        }
-        else if (i < child_count - 1 && subset[i + 1]->data_count > MINIMUM)
-        {
-            transfer_element(i, true);
-            transfer_child(i, true);
-        }
-        else if (i > 0)
-        {
-            // combine subset[i] with subset[i-1]
-            combine(i, false);
-        }
-        else
-            combine(i, true);
-    }
-
-    template<class Item>
-    std::size_t set<Item>::erase(const Item& target)
-    {
-        if (!loose_erase(target))
-            return 0;
-        if (data_count == 0 && child_count != 0)
-        {
-            set<Item>* temp_set = new set<Item>(*(subset[0]));
-            clear();
-            std::copy(temp_set->data, temp_set->data + temp_set->data_count, data);
-            std::copy(temp_set->subset, temp_set->subset + temp_set->child_count, subset);
-            data_count = temp_set->data_count;
-            child_count = temp_set->child_count;
-            //delete temp_set;
-        }
-        return 1;
-    }
 }
 #include "set.template" // Include the implementation.
 

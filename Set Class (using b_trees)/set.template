@@ -16,15 +16,284 @@
 #include<iostream>
 namespace set_adnan{
 
-    template<class Item, class SizeType>
-    void shift_right(Item a[], SizeType size, SizeType index)
-        // Precondition: size is the size of the array, index is a valid index
-        // Postcondition: all elements from index and after it are shifted one spot
-        // to the right to make index a valid place to insert an element in.
+	// HELPER FUNCITONS FOR IMPLEMENTATION.
+
+    template<class Item>
+    std::size_t set<Item>::get_index(const Item& target)
+        // Postcondition: the index returned suffices the following:
+        // target <= data[i] or data_count <= i.
     {
-        for (auto i = size - 1; i > index; --i)
-            a[i] = a[i - 1];
+        std::size_t i = 0;
+        while (i < data_count && data[i] < target)
+            ++i;
+        return i;
     }
+
+    template<class Item>
+    bool set<Item>::found(std::size_t i, const Item& target)
+        // Postcondition: returns true if target is in the root.
+        // else false.
+    {
+        if (i < data_count && !(target < data[i]))
+            return true;
+        else
+            return false;
+    }
+
+    template<class Item>
+    void set<Item>::shift_right_data(std::size_t index)
+        // Precondition: index is a valid index in the array data
+        // Postcondition: every element after index is shift right one spot.
+        // So data[index] is valid to be inserted in.
+    {
+        for (auto i = data_count; i > index; --i)
+            data[i] = data[i - 1];
+    }
+
+    template<class Item>
+    void set<Item>::shift_right_subsets(std::size_t index)
+        // Precondition: index is a valid index in the array subset
+        // Postcondition: every element after subset[index] is shift right one spot.
+        // So data[index] is valid to be inserted in.
+        // No leaks are happening.
+    {
+        for (auto i = child_count; i > index; --i)
+        {
+            subset[i] = subset[i - 1];
+        }
+    }
+
+    template<class Item>
+    void set<Item>::shift_left_data(std::size_t index)
+        // Precondition: index is a valid index in array data. ( -1 means last index)
+        // Postcondition: data[index] is deleted and data_count is decremented by one.
+        // DEFAULT Argument is -1 which indicates that the last element now is not in data.
+    {
+        if (index != -1)
+        {
+            for (auto i = index; i < data_count - 1; ++i)
+                data[i] = data[i + 1];
+        }
+
+        --data_count;
+    }
+
+    template< class Item>
+    void set<Item>::shift_left_subsets(std::size_t index)
+        // Precondition: index is a valid index in subset array.
+        // Postcondition: subset[i] no longer exists.
+        // child_count is decreased by one.
+    {
+        if (index == -1)
+            index = child_count - 1;
+        //delete subset[index];
+        for (auto i = index; i < child_count + 1; ++i)
+            subset[i] = subset[i + 1];
+        --child_count;
+    }
+
+    template<class Item>
+    void set<Item>::transfer_element(std::size_t i, bool right)
+        // Precondition: subset[i] has elements less than MIN.
+        // Postcondition: if 'right' is true, then ith element of the root is transfered to
+        // the end element of subset[i] and subset[i+1] first element is given to the root in place of the taken element.
+        // else, we are going to take an element from subset[i-1]. The first element will have data[i-1] and 
+        // data[i] will be subset[i-1]'s last element.
+    {
+        if (right)
+        {
+            subset[i]->data[subset[i]->data_count] = data[i];
+            subset[i]->data_count++;
+            data[i] = subset[i + 1]->data[0];
+            subset[i + 1]->shift_left_data(0); // erasing the 0th element.
+        }
+        else
+        {
+            // making the 0th index available in the data of subset[i]
+            // then the i-1 th element of the root to the child subset[i]
+            subset[i]->shift_right_data(0);
+            subset[i]->data[0] = data[i - 1];
+            data[i - 1] = subset[i - 1]->data[subset[i - 1]->data_count - 1];
+            subset[i]->data_count++;
+            subset[i - 1]->shift_left_data(-1); // erases the last element
+        }
+    }
+
+    template<class Item>
+    void set<Item>::transfer_child(std::size_t i, bool right)
+        // Precondition: i is the index of the a node which is missing a child.
+        // 'right' is true means we will take a child from the right node, 'right' being false
+        // means we will take a child from the left node.
+        // Postcondition: if 'right' is true, the first child from subset[i+1] is now
+        // the last child of subset[i]. Else, the last child of subset[i-1] is the first child in subset[i]
+    {
+        if (!right)
+        {
+            // take the last child of subset[i-1] and give it to subset[i]
+            if (subset[i - 1]->child_count != 0)
+            {
+                subset[i]->shift_right_subsets(0);
+                subset[i]->subset[0] = subset[i - 1]->subset[subset[i - 1]->child_count - 1];
+                subset[i]->child_count++;
+                subset[i - 1]->shift_left_subsets(); // erasing the last element from the array of subsets
+            }
+        }
+        else
+        {
+            // take the last child of subset[i+1] and give it to subset[i]
+            if (subset[i + 1]->child_count != 0)
+            {
+
+                subset[i]->subset[MINIMUM] = subset[i + 1]->subset[0];
+                subset[i]->child_count++;
+                subset[i + 1]->shift_left_subsets(0);
+            }
+        }
+    }
+
+    template<class Item>
+    void set<Item>::combine(std::size_t i, bool right)
+        // Precondition: subset[i] elements are less than MIN.
+        // Postcondition: if right == true, then subset[i] is combined to subset[i+1]
+        // else subset[i] is combined to subset[i-1]
+    {
+        if (right)
+        {
+            subset[i]->data[MINIMUM - 1] = data[i];
+            shift_left_data(i);
+            Item* temp_data = new Item[MAXIMUM];
+            std::copy(subset[i]->data, subset[i]->data + MINIMUM, temp_data);
+            std::copy(subset[i + 1]->data, subset[i + 1]->data + MINIMUM, temp_data + MINIMUM);
+            std::copy(temp_data, temp_data + MAXIMUM, subset[i + 1]->data);
+            delete[]temp_data;
+            subset[i + 1]->data_count = MAXIMUM;
+
+            if (subset[i]->child_count > 0)
+            {
+                set<Item>** temp_subset = new set<Item> * [MAXIMUM + 2];
+                std::copy(subset[i]->subset, subset[i]->subset + subset[i]->child_count, temp_subset);
+                std::copy(subset[i + 1]->subset, subset[i + 1]->subset + subset[i + 1]->child_count, temp_subset + MINIMUM);
+                std::copy(temp_subset, temp_subset + MAXIMUM + 2, subset[i + 1]->subset);
+                delete temp_subset;
+                subset[i + 1]->child_count += subset[i]->child_count;
+            }
+
+        }
+        else
+        {
+
+            subset[i]->shift_right_data(0);
+            subset[i]->data[0] = data[i - 1];
+            shift_left_data(i - 1);
+            std::copy(subset[i]->data, subset[i]->data + MINIMUM, subset[i - 1]->data + subset[i - 1]->data_count);
+            std::copy(subset[i]->subset, subset[i]->subset + subset[i]->child_count, subset[i - 1]->subset + subset[i - 1]->child_count);
+            subset[i - 1]->data_count = MAXIMUM;
+            subset[i - 1]->child_count += subset[i]->child_count;
+        }
+
+        // removing subset[i] since it is combined with the left or right subset.
+        shift_left_subsets(i);
+    }
+
+    template<class Item>
+    void set<Item>::remove_biggest(Item& removed_entry)
+        // Precondition: (data_count > 0) and the entire B-tree is valid. 
+        // Postcondition: The largest item in the set has been removed, and a copy 
+        // of this removed entry has been placed in removed_entry. The entire 
+        // B-tree is still valid, EXCEPT that the number of entries in the root of this 
+        // set might be one less than the allowed minimum.
+    {
+        if (child_count == 0)
+        {
+            removed_entry = data[data_count - 1];
+            shift_left_data(-1);
+        }
+        // removing the biggest element in the subset
+        else
+            subset[child_count - 1]->remove_biggest(removed_entry);
+
+        if (child_count > 0 && subset[child_count - 1]->data_count < MINIMUM)
+            fix_shortage(child_count - 1);
+    }
+
+    template<class Item>
+    bool set<Item>::loose_erase(const Item& target)
+        // Precondition: The entire B-tree is valid. 
+        // Postcondition: If target was not in the set, then the set is unchanged and 
+        // the return value is false. Otherwise, the target has been removed, the 
+        // return value is true, and the entire B-tree is still valid 
+        // EXCEPT that the number of entries in the root of this set might be one 
+        // less than the allowed minimum
+    {
+        auto i = get_index(target);
+        if (!found(i, target) && child_count == 0)  // target not in root and root has no child.
+            return false;
+        else if (found(i, target) && child_count == 0) // target is found and the root has no children
+        {
+            // removing the element
+            shift_left_data(i);
+            return true;
+        }
+        else if (child_count != 0 && !found(i, target)) // target is not in the root but maybe in its children
+        {
+            bool is_erased = subset[i]->loose_erase(target); // this may cause the root to have shortage in elements
+            if (subset[i]->data_count < MINIMUM)  // to check if shortage happend.
+                fix_shortage(i);
+            return is_erased;
+        }
+        else if(child_count != 0 && found(i, target))  // target in root and root has no children
+        {
+            subset[i]->remove_biggest(data[i]);
+            if (subset[i]->data_count < MINIMUM)
+                fix_shortage(i);
+            return true;
+        }
+    }
+
+    template<class Item>
+    void set<Item>::fix_shortage(std::size_t i)
+        // Precondition: (i < child_count) and the entire B-tree is valid EXCEPT that 
+        // subset[i] has MINIMUM - 1 entries. 
+        // Postcondition: The tree has been rearranged so that the entire B-tree is 
+        // valid EXCEPT that the number of entries in the root of this set might be 
+        // one less than the allowed minimum.
+    {
+        if (i > 0 && subset[i - 1]->data_count > MINIMUM) // subset[i-1] has enough elements to give subset[i]
+        {
+            transfer_element(i, false);  // handles the transfer from root to subset[i] and from subset[i-1] to root.
+            transfer_child(i, false);
+        }
+        else if (i < child_count - 1 && subset[i + 1]->data_count > MINIMUM) // subset[i+1] has enough elements to give subset[i]
+        {
+            transfer_element(i, true);
+            transfer_child(i, true);
+        }
+        else if (i > 0)
+        {
+            // combine subset[i] with subset[i-1]
+            combine(i, false);
+        }
+        else
+            combine(i, true); // combine subset[i] with subset[i+1]
+    }
+
+    template<class Item>
+    std::size_t set<Item>::erase(const Item& target)
+    {
+        if (!loose_erase(target))
+            return 0;
+        if (data_count == 0 && child_count != 0)
+        {
+            set<Item>* temp_set = new set<Item>(*(subset[0]));
+            clear();
+            std::copy(temp_set->data, temp_set->data + temp_set->data_count, data);
+            std::copy(temp_set->subset, temp_set->subset + temp_set->child_count, subset);
+            data_count = temp_set->data_count;
+            child_count = temp_set->child_count;
+        }
+        return 1;
+    }
+
 	
 	template<class Item>
 	set<Item>::set()
@@ -37,15 +306,9 @@ namespace set_adnan{
 	std::size_t set<Item>::count(const Item& target) const
 	{
 		// find 'i' such that data[i] >= target
-		std::size_t i = 0;
-		while((i < data_count) && (data[i] < target))
-		{
-			++i;
-		}
+		std::size_t i = get_index(target);
 
-		// now i could be equal to data_count which is out-of-range index
-		// or it is the wanted index
-		if((i != data_count) && !(target < data[i]))
+		if(found(i, target))
 			return 1;
 		else if(child_count <= i)  // no possible child has the target (base on how elements are sorted ascendantly)
 			return 0;
@@ -58,10 +321,10 @@ namespace set_adnan{
 	{
 		for(std::size_t i = 0; i < child_count; ++i)
 		{
-		  subset[i]->clear();
+		  subset[i]->clear(); // clear the subtrees
 		}
 		for(std::size_t i = 0; i < child_count; ++i)
-		  delete subset[i];			
+		  delete subset[i];	 // free the pointers to the subtrees		
 		child_count = 0;
 		data_count = 0;
 	}
@@ -70,7 +333,7 @@ namespace set_adnan{
 	set<Item>::set(const set<Item>& source)
 	{
 		
-		for (size_t i = 0; i < source.child_count; ++i)
+		for (size_t i = 0; i < source.child_count; ++i)     // deep copy of the pointers of subtrees
 			subset[i] = new set<Item>(*(source.subset[i]));
 		data_count = source.data_count;
 		child_count = source.child_count;
@@ -83,7 +346,7 @@ namespace set_adnan{
 		if (this != &source)
 		{
 			clear();
-			for (size_t i = 0; i < source.child_count; ++i)
+			for (size_t i = 0; i < source.child_count; ++i)    // deep copy of the pointers of subtrees
 				subset[i] = new set<Item>(*(source.subset[i]));
 			data_count = source.data_count;
 			child_count = source.child_count;
@@ -101,21 +364,17 @@ namespace set_adnan{
 		// one more than the allowed maximum.
 	{
 		// find 'i' such that data[i] >= entry
-		std::size_t i = 0;
-		while ((i < data_count) && (data[i] < entry))
-		{
-			++i;
-		}
+		std::size_t i = get_index(entry);
 		// now i could be equal to data_count which is out-of-range index
 		// or it is the wanted index
 
 		// don't change the set if it already has the element.
-		if ((i < data_count) && !(entry < data[i]))
+		if (found(i, entry))
 			return false;
 		else if (is_leaf())
 		{
-			// shifting the elements right to insert entry.
-			shift_right(data, MAXIMUM + 1, i);
+			// shifting the elements right to insert entry in ith place
+			shift_right_data(i);
 
 			// insert the new entry
 			data[i] = entry;
@@ -124,9 +383,9 @@ namespace set_adnan{
 		}
 		else
 		{
-			bool is_inserted = subset[i]->loose_insert(entry);
+			bool is_inserted = subset[i]->loose_insert(entry); // insert the element in the "correct" subset
 
-			// check if the current node has extra entry, then fix it.
+			// check if the subset has extra entry, then fix it.
 			if (subset[i]->data_count > MAXIMUM)
 				fix_excess(i);
 			return is_inserted;
@@ -146,7 +405,7 @@ namespace set_adnan{
 			// erasing the current root to be empty
 			clear();
 			
-			// giving the root a child which is the previous tree.
+			// giving the root a child which is the previous b-tree/set.
 			subset[0] = new_child;
 			child_count++;
 			
@@ -173,7 +432,7 @@ namespace set_adnan{
 		left_set->data_count = MINIMUM; // The new left and right split sets are of have MINIMUM 
 		right_set->data_count = MINIMUM; // elements in the root.
 		
-		// equally giving each set its children.
+		// equally giving each new set its children.
 		if (!subset[i] -> is_leaf())
 		{
 			for (size_t j = 0; j < (MAXIMUM) / 2 + 1; ++j)
@@ -182,24 +441,24 @@ namespace set_adnan{
 				right_set->subset[k] = new set<Item>(*(subset[i]->subset[j]));
 		}
 
-		
+		// updating the count of children from each new set after the split.
 		left_set->child_count = (subset[i]->child_count) / 2;
 		right_set->child_count = (subset[i]->child_count) / 2;
 
 		// passing the middle entry of the excess node's root to its parent
 		if (data_count > 0)
 		{
-			shift_right(data, MAXIMUM + 1, i);
+			shift_right_data(i);
 			data[i] = subset[i]->data[MINIMUM];
 		}
 		else
 		{
 			data[0] = subset[i]->data[MINIMUM];
 		}
-		data_count++;
+		data_count++;  // incrementing the root's count of element after passing it the middle element.
 
-		// fixing the parent's children.
-		shift_right(subset, MAXIMUM + 2, i + 1);
+		// fixing the parent's children such it includes the new split nodes.
+		shift_right_subsets(i + 1);
 		subset[i]->clear();
 		subset[i] = left_set;
 		subset[i + 1] = right_set;
