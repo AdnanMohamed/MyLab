@@ -2,6 +2,10 @@
 // TEMPLATE CLASS PROVIDED: set<Item>
 //   (a container template class for a set of items)
 //
+//-------- Copyright © ---------
+//  @Author: Adnan Hashem Mohamed
+//-------------------------------
+//
 // TYPEDEFS for the set<Item> class:
 //   set<Item>::value_type
 //     set<Item>::value_type is the data type of the items in the set. It may be
