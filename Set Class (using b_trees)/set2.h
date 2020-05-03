@@ -134,12 +134,10 @@ namespace set2_adnan {
 
     private:
         // MEMBER CONSTANTS
-        static const std::size_t MINIMUM = 2;
+        static const std::size_t MINIMUM = 3;
         static const std::size_t MAXIMUM = 2 * MINIMUM;
         // MEMBER VARIABLES
-        //std::size_t data_count;
         std::vector<Item> data;
-        //std::size_t child_count;
         std::vector<set*> subset;
         // HELPER MEMBER FUNCTIONS
         bool is_leaf() const { return (subset.size() == 0); }
