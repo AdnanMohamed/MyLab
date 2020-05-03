@@ -13,8 +13,6 @@
 // 4. If the root has subtrees, then these subtrees are stored in sets pointed to by
 //	  the pointers subset[0] through subset[child_count-1].
 
-#include<algorithm>
-#include<iostream>
 
 namespace set2_adnan{
 
