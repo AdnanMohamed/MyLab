@@ -5,6 +5,10 @@
 //   Table. It may any type with a default constructor, a copy constructor,
 //   an assignment operator, and an integer member variable called key.
 //
+//-------- Copyright © ---------
+//  @Author: Adnan Hashem Mohamed
+//-------------------------------
+//
 // CONSTRUCTOR for the Table<RecordType> template class:
 //   Table( )
 //     Postcondition: The Table has been initialized as an empty Table.
@@ -76,122 +80,6 @@ namespace table2_adnan
         std::size_t hash(int key) const;
         template_node_adnan::node<RecordType>* find_ptr(int key)const;
     };
-
-    template<class RecordType>
-    table<RecordType>::table()
-    {
-        for (size_t i = 0; i < TABLE_SIZE; i++)
-        {
-            data[i] = NULL;
-        }
-        total_records = 0;
-    }
-
-    template<class RecordType>
-    table<RecordType>::table(const table& source)
-    {
-        total_records = source.total_records;
-        for (std::size_t i = 0; i < total_records; ++i)
-            template_node_adnan::list_copy(source.data[i], data[i]);
-    }
-
-    template<class RecordType>
-    table<RecordType>::~table()
-    {
-        for (size_t i = 0; i < TABLE_SIZE; i++)
-        {
-            template_node_adnan::list_clear(data[i]);
-        }
-    }
-    
-    template<class RecordType>
-    table<RecordType>& table<RecordType>::operator =(const table<RecordType>& source)
-    {
-        if (this != &source)
-        {
-            table::~table();
-            total_records = source.total_records;
-            for (std::size_t i = 0; i < total_records; ++i)
-                template_node_adnan::list_copy(source.data[i], data[i]);
-        }
-        return *this;
-    }
-    
-    template<class RecordType>
-    void table<RecordType>::insert(const RecordType& entry)
-    {
-        auto target = find_ptr(entry.key); // checking if there is already an entry with the same key.
-        if (target != NULL)         
-            target->set_data(entry); // overwrite the old entry.
-        else
-        {
-            template_node_adnan::list_head_insert(data[hash(entry.key)], entry); // insert a new entry.
-            ++total_records;
-        }
-
-    }
-
-    template<class RecordType>
-    bool table<RecordType>::is_present(int key) const
-    {
-        auto target = find_ptr(key);
-        return target != NULL;
-    }
-
-    template<class RecordType>
-    void table<RecordType>::remove(int key)
-    {
-        auto index = hash(key);
-        for (auto cursor = data[index]; cursor!= NULL; cursor = cursor->link())
-        {
-            if (cursor->data().key == key)
-            {
-                // copy the data in the head of the linked list to the 
-                // node to be removed.
-                cursor->set_data(data[index]->data());
-                // remove the head since we copied it to the other node.
-                template_node_adnan::list_head_remove(data[index]);
-                --total_records;
-                break;
-            }
-        }
-
-    }
-    
-    template<class RecordType>
-    void table<RecordType>::find(int key, bool& found, RecordType& result) const
-    {
-        auto index = hash(key);
-        auto target = find_ptr(key);
-        if (target == NULL)
-        {
-            found = false;
-            return;
-        }
-        result = target->data();
-        found = true;
-        return;
-    }
-
-    template<class RecordType>
-    inline std::size_t table<RecordType>::hash(int key) const
-    {
-        return key % TABLE_SIZE;
-    }
-
-    template<class RecordType>
-    template_node_adnan::node<RecordType>* table<RecordType>::find_ptr(int key)const
-        // Precondition: key >= 0
-        // Postcondition: returns a pointer to the node containing such key,
-        // or returns NULL if not found.
-    {
-        for (auto cursor = data[hash(key)]; cursor != NULL; cursor = cursor->link())
-        {
-            if (cursor->data().key == key)
-                return cursor;
-        }
-        return NULL;
-    }
 
 }
 
