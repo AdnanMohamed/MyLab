@@ -1,0 +1,27 @@
+// This is the implementation file for the template class table<Item>.
+// See interface in table1.h
+//
+//	------ - Copyright © -------- -
+//	@Author: Adnan Hashem Mohamed
+//	------------------------------ 
+//
+// CLASS INVARIANT:
+//	1. The number of records in the table is in the member variable used.
+//	2. The actual records of the table are stored in the array data, 
+//	with a maximum of CAPACITY entries. Each used spot in the array has a non-negative key.
+//	An unused record in the array has its key field set to the constant NEVER_USED (if it has never been used)
+//	or the constant PREVIOUSLY_USED (if it once was used but is now vacant).
+
+namespace table1_adnan{
+
+	template<class RecordType>
+	table<RecordType>::table()
+	{
+		for(int i = 0; i < CAPACITY; ++i)
+		{
+			data[i].key = NEVER_USED;
+		}
+		used = 0;
+	}
+	
+} // end of namespace
