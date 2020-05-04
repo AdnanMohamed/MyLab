@@ -1,0 +1,13 @@
+// Implementation for the class: table <RecordType,TABLE_SIZE, hashkey(const RecordType&)>
+// See interface in table3.h
+//
+//-------- Copyright © ---------
+//  @Author: Adnan Hashem Mohamed
+//-------------------------------
+//
+//	CLASS INVARIANT:
+//	1- Each data[i] will be a vector that contains
+//	   all the records with a hash value of i.
+//	2- The total number of records in the table 
+//	   will be stored in member total_records.
+
