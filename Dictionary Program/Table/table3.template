@@ -1,0 +1,84 @@
+// Implementation for the class: table <RecordType,TABLE_SIZE, hashkey(const RecordType&)>
+// See interface in table3.h
+//
+//-------- Copyright © ---------
+//  @Author: Adnan Hashem Mohamed
+//-------------------------------
+//
+//	CLASS INVARIANT:
+//	1- Each data[i] will be a vector that contains
+//	   all the records with a hash value of i.
+//	2- The total number of records in the table 
+//	   will be stored in member total_records.
+
+namespace table3_adnan{
+
+    template <class RecordType, size_t TABLE_SIZE, std::string hashkey(const RecordType&)>
+    void table<RecordType, TABLE_SIZE, hashkey>::insert(const RecordType& entry)
+    {
+        // check if the entry was already in the table.
+        std::string key = hashkey(entry);
+        size_t i = get_index(key);
+        if (i == -1)
+        {
+            data[hash(key)].push_back(entry);
+            ++total_records;
+        }
+        else
+            data[hash(key)][i] = entry;
+    }
+
+    template <class RecordType, size_t TABLE_SIZE, std::string hashkey(const RecordType&)>
+    void table<RecordType, TABLE_SIZE, hashkey>::remove(const std::string& key)
+    {
+        auto index = get_index(key);
+        if (index != -1)
+        {
+            data[hash(key)].erase(data[hash(key)].begin() + index);
+            --total_records;
+        }
+    }
+
+    template <class RecordType, size_t TABLE_SIZE, std::string hashkey(const RecordType&)>
+    bool table<RecordType, TABLE_SIZE, hashkey>::is_present(const std::string& key) const
+    {
+        return get_index(key) != -1;
+
+    }
+
+    template <class RecordType, size_t TABLE_SIZE, std::string hashkey(const RecordType&)>
+    void table<RecordType, TABLE_SIZE, hashkey>::find(const std::string& key, bool& found, RecordType& result) const
+    {
+        auto index = get_index(key); // get the possible location of the entry.
+        if (index == -1)  // not present.
+            found = false;
+        else  // present
+        {
+            found = true;
+            result = data[hash(key)][index]; // set the result to a copy of the target entry.
+        }
+    }
+
+    template <class RecordType, size_t TABLE_SIZE, std::string hashkey(const RecordType&)>
+    std::size_t table<RecordType, TABLE_SIZE, hashkey>::hash(const std::string& key) const
+    {
+        std::size_t i = key[0] * key.length();
+        return i % TABLE_SIZE;
+    }
+
+    template <class RecordType, size_t TABLE_SIZE, std::string hashkey(const RecordType&)>
+    std::size_t table<RecordType, TABLE_SIZE, hashkey>::get_index(const std::string& key)const
+        // Precondition: key >= 0
+        // Postcondition: returns the index where the record is located in.
+        // If the record is not in the table, -1 is returned. (which is a special number in size_t)
+    {
+        int index = hash(key);
+        for (size_t i = 0; i < data[index].size(); i++)
+        {
+            if (hashkey(data[index][i]) == key)
+                return i;
+        }
+        return -1;
+    }
+
+} // end of namespace
