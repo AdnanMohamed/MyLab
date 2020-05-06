@@ -26,7 +26,7 @@ std::ostream& operator<<(std::ostream& out, const book& the_book)
 	out << "Title: " << the_book.title << endl
 		<< "Author: " << the_book.author << endl
 		<< "ISBN: " << the_book.ISBN << endl
-		<< "Publication Date: " << the_book.pub_data;
+		<< "Publication Date: " << the_book.pub_date;
 	return out;
 }
 
@@ -103,7 +103,7 @@ void build_database(std::istream& fin, bst_adnan::bst<book>& records)
 		the_book.ISBN = next;
 		getline(fin, next, ';'); // reading the author's name
 		the_book.author = next;
-		fin >> the_book.pub_data;
+		fin >> the_book.pub_date;
 		records.insert(the_book);
 		eat_line(fin);
 	}

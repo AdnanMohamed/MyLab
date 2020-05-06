@@ -19,7 +19,7 @@ struct book {
 	std::string ISBN;
 	std::string title;
 	std::string author;
-	int pub_data; // the year of publication.
+	int pub_date; // the year of publication.
 	
 };
 
