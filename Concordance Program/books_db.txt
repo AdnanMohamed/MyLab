@@ -1,0 +1,9 @@
+Title;ISBN;Author;Publication_Date(YEAR)
+The 5 Second Rule;9781682612385;Mel Robbins;2017
+The Magic of Thinking Big;9781501118210;David Schwartz;1959
+Mindset: The New Psychology of Success;9780345472328;Carol Dweck;2007
+The 7 Habits of Highly Effective People;9781455892815;Stephen Covey;1989
+Who Moved My Cheese?;9780671043346;Spencer Johnson;1998
+The One Minute Manager;9780688014292;Spencer Johnson;1982
+The 8th Habit;9781455893034;Stephen Covey;2004
+The Power of Positive Thinking;9780743507806;Norman Peale;1952
